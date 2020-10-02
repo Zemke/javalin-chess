@@ -1,18 +1,23 @@
 package io.zemke.javalinchess.controller
 
 import io.javalin.http.Context
-import io.javalin.plugin.json.JavalinJson
 import io.zemke.javalinchess.chess.Chess
 import io.zemke.javalinchess.complex.Memcached
-import io.zemke.javalinchess.figure.Figure
 
 object MatchController {
 
     fun create(ctx: Context) {
-        Memcached.store("match", Chess.starting)
+        val player1 = Player("John")
+        val match = Match(
+                grid = Chess.starting,
+                player1 = player1,
+                player2 = Player("Ronny"),
+                nextTurn = player1
+        )
+        Memcached.store("match", match)
     }
 
     fun read(ctx: Context) {
-        ctx.json(Memcached.retrieve<List<List<Figure>>>("match"))
+        ctx.json(Memcached.retrieve<String>("match"))
     }
 }
