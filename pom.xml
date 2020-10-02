@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>javalinchess</name>
-    <url>http://www.chess.zemke.io</url>
+    <url>https://chess.zemke.io</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
