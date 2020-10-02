@@ -1,5 +1,3 @@
 package io.zemke.javalinchess.figure
 
-import io.zemke.javalinchess.figure.Figure
-
-class Queen : Figure()
+class Queen : Figure("Queen")
