@@ -1,8 +1,8 @@
 package io.zemke.javalinchess.figure
 
-import java.io.Serializable
+import io.zemke.javalinchess.controller.Entity
 
-open class Figure(val name: String) : Serializable {
+open class Figure(val name: String) : Entity() {
     override fun toString(): String {
         return name
     }
