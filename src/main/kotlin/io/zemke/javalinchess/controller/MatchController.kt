@@ -9,9 +9,7 @@ import io.zemke.javalinchess.figure.Figure
 object MatchController {
 
     fun create(ctx: Context) {
-        println(Chess.starting)
-        println(JavalinJson.toJson(Chess.starting))
-        Memcached.store("match", JavalinJson.toJson(Chess.starting))
+        Memcached.store("match", Chess.starting)
     }
 
     fun read(ctx: Context) {
