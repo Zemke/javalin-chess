@@ -1,5 +1,5 @@
 package io.zemke.javalinchess.figure
 
-import io.zemke.javalinchess.figure.Figure
+import io.zemke.javalinchess.controller.Player
 
-class Bishop : Figure("Bishop")
+class Bishop(player: Player) : Figure("Bishop", player)

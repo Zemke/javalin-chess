@@ -1,4 +1,5 @@
 package io.zemke.javalinchess.figure
 
-class Rook : Figure("Rook") {
-}
+import io.zemke.javalinchess.controller.Player
+
+class Rook(player: Player) : Figure("Rook", player)
