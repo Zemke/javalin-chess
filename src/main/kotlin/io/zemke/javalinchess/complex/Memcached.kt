@@ -11,7 +11,7 @@ object Memcached {
 
     fun store(key: String, obj: Any): Boolean {
         client[key, 3600] = obj
-        return client.touch(key, 10)
+        return client.touch(key, 60 * 60 * 24) // a day
     }
 
     fun <T> retrieve(key: String): T {

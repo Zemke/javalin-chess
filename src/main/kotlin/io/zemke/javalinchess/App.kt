@@ -2,6 +2,7 @@ package io.zemke.javalinchess
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.http.InternalServerErrorResponse
 import io.zemke.javalinchess.chess.Chess
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.controller.Match
@@ -20,10 +21,15 @@ fun main() {
                         player2 = Player("Ronny"),
                         nextTurn = player1
                 )
-                Memcached.store("match", match)
+                when (Memcached.store(match.id, match)) {
+                    true -> it.json(match)
+                    else -> throw InternalServerErrorResponse()
+                }
             }
-            get {
-                it.json(Memcached.retrieve<String>("match"))
+            path(":key") {
+                get {
+                    it.json(Memcached.retrieve<Match>(it.pathParam("key")))
+                }
             }
         }
     }
