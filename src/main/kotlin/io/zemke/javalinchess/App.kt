@@ -2,7 +2,9 @@ package io.zemke.javalinchess
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.http.BadRequestResponse
 import io.javalin.http.InternalServerErrorResponse
+import io.javalin.plugin.json.JavalinJson
 import io.zemke.javalinchess.chess.Chess
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.controller.Match
@@ -30,6 +32,15 @@ fun main() {
             path(":key") {
                 get {
                     it.json(Memcached.retrieve<Match>(it.pathParam("key")))
+                }
+                path("turn") {
+                    post {
+                        val match = Memcached.retrieve<Match>(it.pathParam("key"))
+                        val turn = JavalinJson.fromJson(it.body(), TurnDto::class.java)
+                        val figure = match.grid.flatten().find { figure -> figure.id == turn.figure }
+                                ?: throw BadRequestResponse("Figure ${turn.figure} not found in grid")
+                        TurnValidator.assertTurn(match.grid, match.nextTurn, figure, turn.target)
+                    }
                 }
             }
         }
