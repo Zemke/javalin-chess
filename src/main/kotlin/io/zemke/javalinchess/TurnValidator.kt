@@ -1,5 +1,6 @@
 package io.zemke.javalinchess
 
+import io.zemke.javalinchess.controller.Match
 import io.zemke.javalinchess.controller.Player
 import io.zemke.javalinchess.figure.Figure
 import kotlin.jvm.Throws
@@ -7,8 +8,8 @@ import kotlin.jvm.Throws
 object TurnValidator {
 
     @Throws(NotThatPlayersTurnException::class)
-    fun assertTurn(grid: List<List<Figure>>, nextTurn: Player, figure: Figure, gridTarget: Array<Int>) {
-        if (figure.player != nextTurn) throw NotThatPlayersTurnException(figure.player, nextTurn)
+    fun assertTurn(match: Match, figure: Figure, gridTarget: Array<Int>) {
+        if (figure.player != match.nextTurn) throw NotThatPlayersTurnException(figure.player, match.nextTurn)
         // todo validate the turn
     }
 
