@@ -39,7 +39,7 @@ fun main() {
                         val turn = JavalinJson.fromJson(it.body(), TurnDto::class.java)
                         val figure = match.board.findFigureById(turn.figure)
                                 ?: throw BadRequestResponse("Figure ${turn.figure} not found in grid")
-                        TurnValidator.assertTurn(match, figure, turn.target)
+                        figure.move(match.board, turn.target) // todo validate somehow
                     }
                 }
             }
