@@ -15,10 +15,11 @@ fun main() {
         path("match") {
             post {
                 val player1 = Player("John")
+                val player2 = Player("Ronny")
                 val match = Match(
-                        grid = Chess.starting,
+                        grid = Chess.createStartingGrid(player1, player2),
                         player1 = player1,
-                        player2 = Player("Ronny"),
+                        player2 = player2,
                         nextTurn = player1
                 )
                 when (Memcached.store(match.id, match)) {
