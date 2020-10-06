@@ -1,9 +1,9 @@
-package io.zemke.javalinchess.figure
+package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
 import io.zemke.javalinchess.controller.Player
 
-class Queen(player: Player, color: Color, position: Position) : Figure("Queen", player, color, position) {
+class Bishop(player: Player, color: Color, position: Position) : Piece("Bishop", player, color, position) {
     override fun move(board: Board, target: Position): Board {
         TODO("Not yet implemented")
     }

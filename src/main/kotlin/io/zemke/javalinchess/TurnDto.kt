@@ -1,9 +1,9 @@
 package io.zemke.javalinchess
 
-import io.zemke.javalinchess.figure.Position
+import io.zemke.javalinchess.piece.Position
 
 
 class TurnDto(
-        val figure: String,
+        val piece: String,
         val target: Position
 )

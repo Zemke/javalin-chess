@@ -1,9 +1,9 @@
-package io.zemke.javalinchess.figure
+package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
 import io.zemke.javalinchess.controller.Player
 
-class Rook(player: Player, color: Color, position: Position) : Figure("Rook", player, color, position) {
+class Rook(player: Player, color: Color, position: Position) : Piece("Rook", player, color, position) {
 
     override fun move(board: Board, target: Position): Board {
         // todo jump over others
@@ -12,8 +12,8 @@ class Rook(player: Player, color: Color, position: Position) : Figure("Rook", pl
         // todo should be split into two function; getting the allowed moves and performing the move
         //  for better testability
         var allowed = mutableListOf<Position>()
-        val current = board.findPositionOfFigure(this)
-                ?: throw RuntimeException("Position of Figure $this not found")
+        val current = board.findPositionOfPiece(this)
+                ?: throw RuntimeException("Position of Piece $this not found")
         for (num in 0 until current.file) allowed.add(Position(num, current.rank))
         for (num in current.file..7) allowed.add(Position(num, current.rank))
         for (num in 0 until current.rank) allowed.add(Position(current.file, num))

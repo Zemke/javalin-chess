@@ -1,4 +1,4 @@
-package io.zemke.javalinchess.figure
+package io.zemke.javalinchess.piece
 
 class Position(val file: Int, val rank: Int) {
 

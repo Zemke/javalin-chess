@@ -1,19 +1,19 @@
 package io.zemke.javalinchess.controller
 
-import io.zemke.javalinchess.figure.*
-import io.zemke.javalinchess.figure.Color.BLACK
-import io.zemke.javalinchess.figure.Color.WHITE
+import io.zemke.javalinchess.piece.*
+import io.zemke.javalinchess.piece.Color.BLACK
+import io.zemke.javalinchess.piece.Color.WHITE
 
 class Board {
 
-    private val grid: List<MutableList<Figure?>>
+    private val grid: List<MutableList<Piece?>>
 
-    constructor(grid: List<MutableList<Figure?>>) {
+    constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
     }
 
     constructor(p1: Player, p2: Player) {
-        grid = listOf<MutableList<Figure?>>(
+        grid = listOf<MutableList<Piece?>>(
                 mutableListOf(Rook(p1, BLACK, Position(0, 7)), Knight(p1, BLACK, Position(1, 7)), Bishop(p1, BLACK, Position(2, 7)), Queen(p1, BLACK, Position(3, 7)), King(p1, BLACK, Position(4, 7)), Bishop(p1, BLACK, Position(5, 7)), Knight(p1, BLACK, Position(6, 7)), Rook(p1, BLACK, Position(7, 7))),
                 mutableListOf(Pawn(p1, BLACK, Position(0, 6)), Pawn(p1, BLACK, Position(1, 6)), Pawn(p1, BLACK, Position(2, 6)), Pawn(p1, BLACK, Position(3, 6)), Pawn(p1, BLACK, Position(4, 6)), Pawn(p1, BLACK, Position(5, 6)), Pawn(p1, BLACK, Position(6, 6)), Pawn(p1, BLACK, Position(7, 6))),
                 mutableListOf(null, null, null, null, null, null, null, null),
@@ -26,7 +26,7 @@ class Board {
     }
 
     constructor() {
-        grid = listOf<MutableList<Figure?>>(
+        grid = listOf<MutableList<Piece?>>(
                 mutableListOf(null, null, null, null, null, null, null, null),
                 mutableListOf(null, null, null, null, null, null, null, null),
                 mutableListOf(null, null, null, null, null, null, null, null),
@@ -38,36 +38,36 @@ class Board {
         )
     }
 
-    fun findFigureById(figureId: String): Figure? =
+    fun findPieceById(pieceId: String): Piece? =
             grid.flatten()
                     .filterNotNull()
-                    .find { figure -> figure.id == figureId }
+                    .find { it.id == pieceId }
 
-    fun findPositionOfFigure(figure: Figure): Position? {
+    fun findPositionOfPiece(piece: Piece): Position? {
         grid.forEachIndexed { rankIdx, rank ->
             rank.forEachIndexed { idx, f ->
-                if (f == figure) {
-                    return@findPositionOfFigure Position(idx, rankIdx)
+                if (f == piece) {
+                    return@findPositionOfPiece Position(idx, rankIdx)
                 }
             }
         }
         return null
     }
 
-    fun move(figure: Figure, target: Position): Board {
-        val current = findPositionOfFigure(figure)
-                ?: throw RuntimeException("Position of Figure $this not found")
-        grid[target.rank][target.file] = figure
+    fun move(piece: Piece, target: Position): Board {
+        val current = findPositionOfPiece(piece)
+                ?: throw RuntimeException("Position of Piece $this not found")
+        grid[target.rank][target.file] = piece
         grid[current.rank][current.file] = null
         return this
     }
 
-    fun getFigureAt(position: Position): Figure? {
+    fun getPieceAt(position: Position): Piece? {
         return grid[position.rank][position.file]
     }
 
-    fun putFigure(figure: Figure) {
-        grid[figure.position.rank][figure.position.file] = figure
+    fun putPiece(piece: Piece) {
+        grid[piece.position.rank][piece.position.file] = piece
     }
 
     override fun toString(): String {

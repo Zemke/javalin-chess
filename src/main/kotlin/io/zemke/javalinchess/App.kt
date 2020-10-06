@@ -37,9 +37,9 @@ fun main() {
                     post {
                         val match = Memcached.retrieve<Match>(it.pathParam("key"))
                         val turn = JavalinJson.fromJson(it.body(), TurnDto::class.java)
-                        val figure = match.board.findFigureById(turn.figure)
-                                ?: throw BadRequestResponse("Figure ${turn.figure} not found in grid")
-                        figure.move(match.board, turn.target) // todo validate somehow
+                        val piece = match.board.findPieceById(turn.piece)
+                                ?: throw BadRequestResponse("Piece ${turn.piece} not found in grid")
+                        piece.move(match.board, turn.target) // todo validate somehow
                     }
                 }
             }
