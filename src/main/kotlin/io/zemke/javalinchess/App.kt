@@ -39,7 +39,10 @@ fun main() {
                         val turn = JavalinJson.fromJson(it.body(), TurnDto::class.java)
                         val piece = match.board.findPieceById(turn.piece)
                                 ?: throw BadRequestResponse("Piece ${turn.piece} not found in grid")
-                        piece.move(match.board, turn.target) // todo validate somehow
+                        if (!piece.allowedNextPositions(match.board).contains(turn.target)) {
+                            throw BadRequestResponse("Piece $piece cannot move to ${turn.target}")
+                        }
+                        match.board.move(piece, turn.target)
                     }
                 }
             }

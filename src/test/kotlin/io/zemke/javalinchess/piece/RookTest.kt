@@ -3,64 +3,21 @@ package io.zemke.javalinchess.piece
 import io.zemke.javalinchess.controller.Board
 import io.zemke.javalinchess.controller.Player
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class RookTest {
 
     @Test
-    fun `move right`() {
+    fun `allowed next positions when in the center on an empty board`() {
+        val rook = Rook(Player("p1"), Color.BLACK, Position(3, 3))
         val board = Board()
-        val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
-        val piece = board.getPieceAt(source)
-        assertThat(piece).isNotNull
-        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
-        val target = Position(3, 5)
-        val actual = piece!!.move(board, target)
-        assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        assertThat(actual.getPieceAt(source)).isNull()
-    }
-
-    @Test
-    fun `move left`() {
-        val board = Board()
-        val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
-        val piece = board.getPieceAt(source)
-        assertThat(piece).isNotNull
-        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
-        val target = Position(3, 1)
-        val actual = piece!!.move(board, target)
-        assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        assertThat(actual.getPieceAt(source)).isNull()
-    }
-
-    @Test
-    fun `move up`() {
-        val board = Board()
-        val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
-        val piece = board.getPieceAt(source)
-        assertThat(piece).isNotNull
-        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
-        val target = Position(5, 3)
-        val actual = piece!!.move(board, target)
-        assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        assertThat(actual.getPieceAt(source)).isNull()
-    }
-
-    @Test
-    fun `move down`() {
-        val board = Board()
-        val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
-        val piece = board.getPieceAt(source)
-        assertThat(piece).isNotNull
-        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
-        val target = Position(1, 3)
-        val actual = piece!!.move(board, target)
-        assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        assertThat(actual.getPieceAt(source)).isNull()
+        board.putPiece(rook)
+        val actual = rook.allowedNextPositions(board);
+        assertThat(actual).containsExactlyInAnyOrder(
+                Position(0, 3), Position(1, 3), Position(2, 3),
+                Position(4, 3), Position(5, 3), Position(6, 3), Position(7, 3),
+                Position(3, 0), Position(3, 1), Position(3, 2),
+                Position(3, 4), Position(3, 5), Position(3, 6), Position(3, 7))
     }
 }
 
