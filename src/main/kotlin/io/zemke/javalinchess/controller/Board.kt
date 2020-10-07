@@ -67,6 +67,9 @@ class Board {
     }
 
     fun putPiece(piece: Piece) {
+        if (grid.flatten().contains(piece)) {
+            throw IllegalArgumentException("Piece $piece is already on the Board.")
+        }
         grid[piece.position.rank][piece.position.file] = piece
     }
 
