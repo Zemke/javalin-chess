@@ -78,8 +78,12 @@ class Board {
                 .filterNotNull()
                 .map { it.name.length }
                 .maxOrNull() ?: 0
-        return grid.joinToString(separator = "\n") { rank ->
-            rank.map { it?.name ?: "" }.joinToString(" | ") { it.padEnd(maxNameLength) }
+        val prefix = (-1 until (grid[0].size)).toList()
+                .joinToString(postfix = "\n", separator = " | ") { "$it".padStart(maxNameLength) }
+        return "file by rank, x by y\n" + grid.indices.joinToString(separator = "\n", prefix = prefix) { rankIdx ->
+            (-1 until grid[rankIdx].size)
+                    .map { if (it == -1) "$rankIdx".padStart(maxNameLength) else grid[rankIdx][it]?.name ?: "" }
+                    .joinToString(" | ") { it.padEnd(maxNameLength) }
         }
     }
 }
