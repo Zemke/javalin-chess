@@ -73,6 +73,18 @@ class Board {
         grid[piece.position.rank][piece.position.file] = piece
     }
 
+    fun ownPieces(color: Color): List<Piece> {
+        return grid.flatten()
+                .filterNotNull()
+                .filter { it.color == color }
+    }
+
+    fun opponentPieces(color: Color): List<Piece> {
+        return grid.flatten()
+                .filterNotNull()
+                .filter { it.color != color }
+    }
+
     override fun toString(): String {
         val maxNameLength = grid.flatten()
                 .filterNotNull()
