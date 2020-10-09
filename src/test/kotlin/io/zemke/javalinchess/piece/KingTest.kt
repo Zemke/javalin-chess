@@ -1,7 +1,6 @@
 package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.controller.Player
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -9,8 +8,8 @@ class KingTest {
 
     @Test
     fun `next allowed positions on an empty board`() {
-        val board = Board()
-        val king = King(Player("p1"), Color.BLACK, Position(3, 3))
+        val board = Board(false)
+        val king = King(Color.BLACK, Position(3, 3))
         board.putPiece(king)
         val actual = king.allowedNextPositions(board)
         Assertions.assertThat(actual).containsExactlyInAnyOrder(
@@ -20,14 +19,12 @@ class KingTest {
 
     @Test
     fun `next allowed positions in more complex situation`() {
-        val board = Board()
-        val p1 = Player("p1")
-        val p2 = Player("p2")
-        val king = King(p1, Color.BLACK, Position(3, 3))
+        val board = Board(false)
+        val king = King(Color.BLACK, Position(3, 3))
         setOf(
-                Rook(p2, Color.WHITE, Position(2, 1)),
-                Rook(p1, Color.BLACK, Position(2, 3)),
-                Rook(p2, Color.WHITE, Position(4, 4)))
+                Rook(Color.WHITE, Position(2, 1)),
+                Rook(Color.BLACK, Position(2, 3)),
+                Rook(Color.WHITE, Position(4, 4)))
                 .forEach { board.putPiece(it) }
         board.putPiece(king)
         val actual = king.allowedNextPositions(board)

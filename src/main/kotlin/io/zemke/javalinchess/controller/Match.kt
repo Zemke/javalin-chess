@@ -1,8 +1,8 @@
 package io.zemke.javalinchess.controller
 
+import io.zemke.javalinchess.piece.Color
+
 class Match(
         val board: Board,
-        val nextTurn: Player,
-        val player1: Player,
-        val player2: Player
+        val nextTurn: Color,
 ) : Entity()

@@ -1,9 +1,8 @@
 package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.controller.Player
 
-class Bishop(player: Player, color: Color, position: Position) : Piece("Bishop", player, color, position) {
+class Bishop(color: Color, position: Position) : Piece("Bishop", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)

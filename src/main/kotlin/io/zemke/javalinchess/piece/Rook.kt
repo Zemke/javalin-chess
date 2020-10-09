@@ -1,9 +1,8 @@
 package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.controller.Player
 
-class Rook(player: Player, color: Color, position: Position) : Piece("Rook", player, color, position) {
+class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)

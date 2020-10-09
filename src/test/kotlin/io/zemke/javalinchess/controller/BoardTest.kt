@@ -10,9 +10,9 @@ class BoardTest {
 
     @Test
     fun `rook move right`() {
-        val board = Board()
+        val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
+        board.putPiece(Rook(Color.BLACK, source))
         val piece = board.getPieceAt(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -24,9 +24,9 @@ class BoardTest {
 
     @Test
     fun `rook move left`() {
-        val board = Board()
+        val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
+        board.putPiece(Rook(Color.BLACK, source))
         val piece = board.getPieceAt(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -38,9 +38,9 @@ class BoardTest {
 
     @Test
     fun `rook move up`() {
-        val board = Board()
+        val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
+        board.putPiece(Rook(Color.BLACK, source))
         val piece = board.getPieceAt(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -52,9 +52,9 @@ class BoardTest {
 
     @Test
     fun `rook move down`() {
-        val board = Board()
         val source = Position(3, 3)
-        board.putPiece(Rook(Player("p1"), Color.BLACK, source))
+        val board = Board(false)
+        board.putPiece(Rook(Color.BLACK, source))
         val piece = board.getPieceAt(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)

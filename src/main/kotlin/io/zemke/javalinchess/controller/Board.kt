@@ -12,30 +12,31 @@ class Board {
         this.grid = grid
     }
 
-    constructor(p1: Player, p2: Player) {
-        grid = listOf<MutableList<Piece?>>(
-                mutableListOf(Rook(p1, BLACK, Position(0, 7)), Knight(p1, BLACK, Position(1, 7)), Bishop(p1, BLACK, Position(2, 7)), Queen(p1, BLACK, Position(3, 7)), King(p1, BLACK, Position(4, 7)), Bishop(p1, BLACK, Position(5, 7)), Knight(p1, BLACK, Position(6, 7)), Rook(p1, BLACK, Position(7, 7))),
-                mutableListOf(Pawn(p1, BLACK, Position(0, 6)), Pawn(p1, BLACK, Position(1, 6)), Pawn(p1, BLACK, Position(2, 6)), Pawn(p1, BLACK, Position(3, 6)), Pawn(p1, BLACK, Position(4, 6)), Pawn(p1, BLACK, Position(5, 6)), Pawn(p1, BLACK, Position(6, 6)), Pawn(p1, BLACK, Position(7, 6))),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(Pawn(p2, WHITE, Position(0, 1)), Pawn(p2, WHITE, Position(1, 1)), Pawn(p2, WHITE, Position(2, 1)), Pawn(p2, WHITE, Position(3, 1)), Pawn(p2, WHITE, Position(4, 1)), Pawn(p2, WHITE, Position(5, 1)), Pawn(p2, WHITE, Position(6, 1)), Pawn(p2, WHITE, Position(7, 1))),
-                mutableListOf(Rook(p2, WHITE, Position(0, 0)), Knight(p2, WHITE, Position(1, 0)), Bishop(p2, WHITE, Position(2, 0)), Queen(p2, WHITE, Position(3, 0)), King(p2, WHITE, Position(4, 0)), Bishop(p2, WHITE, Position(5, 0)), Knight(p2, WHITE, Position(6, 0)), Rook(p2, WHITE, Position(7, 0)))
-        )
-    }
+    constructor(init: Boolean) {
+        if (init) {
+            grid = listOf<MutableList<Piece?>>(
+                    mutableListOf(Rook(BLACK, Position(0, 7)), Knight(BLACK, Position(1, 7)), Bishop(BLACK, Position(2, 7)), Queen(BLACK, Position(3, 7)), King(BLACK, Position(4, 7)), Bishop(BLACK, Position(5, 7)), Knight(BLACK, Position(6, 7)), Rook(BLACK, Position(7, 7))),
+                    mutableListOf(Pawn(BLACK, Position(0, 6)), Pawn(BLACK, Position(1, 6)), Pawn(BLACK, Position(2, 6)), Pawn(BLACK, Position(3, 6)), Pawn(BLACK, Position(4, 6)), Pawn(BLACK, Position(5, 6)), Pawn(BLACK, Position(6, 6)), Pawn(BLACK, Position(7, 6))),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(Pawn(WHITE, Position(0, 1)), Pawn(WHITE, Position(1, 1)), Pawn(WHITE, Position(2, 1)), Pawn(WHITE, Position(3, 1)), Pawn(WHITE, Position(4, 1)), Pawn(WHITE, Position(5, 1)), Pawn(WHITE, Position(6, 1)), Pawn(WHITE, Position(7, 1))),
+                    mutableListOf(Rook(WHITE, Position(0, 0)), Knight(WHITE, Position(1, 0)), Bishop(WHITE, Position(2, 0)), Queen(WHITE, Position(3, 0)), King(WHITE, Position(4, 0)), Bishop(WHITE, Position(5, 0)), Knight(WHITE, Position(6, 0)), Rook(WHITE, Position (7, 0)))
+            )
 
-    constructor() {
-        grid = listOf<MutableList<Piece?>>(
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null),
-                mutableListOf(null, null, null, null, null, null, null, null)
-        )
+        } else {
+            grid = listOf<MutableList<Piece?>>(
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null),
+                    mutableListOf(null, null, null, null, null, null, null, null)
+            )
+        }
     }
 
     fun findPieceById(pieceId: String): Piece? =
