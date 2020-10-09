@@ -5,11 +5,11 @@ import io.zemke.javalinchess.controller.Player
 
 class Rook(player: Player, color: Color, position: Position) : Piece("Rook", player, color, position) {
 
-    override fun allowedNextPositions(board: Board): List<Position> {
+    override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
                 ?: throw RuntimeException("Position of Figure $this not found")
         val allowedOnEmptyBoard = generallyAllowedForPiece(current)
-        val result = mutableListOf(*allowedOnEmptyBoard.toTypedArray())
+        val result = mutableSetOf(*allowedOnEmptyBoard.toTypedArray())
 
         // same rank
         removeProhibitedPositions(result, current, board, (current.file + 1)..7, true) // files to the right
@@ -23,7 +23,7 @@ class Rook(player: Player, color: Color, position: Position) : Piece("Rook", pla
     }
 
     private fun removeProhibitedPositions(
-            result: MutableList<Position>,
+            result: MutableSet<Position>,
             current: Position,
             board: Board,
             progression: IntProgression,
@@ -56,14 +56,14 @@ class Rook(player: Player, color: Color, position: Position) : Piece("Rook", pla
         }
     }
 
-    private fun generallyAllowedForPiece(current: Position): List<Position> {
-        val allowedOnSameRank = mutableListOf<Position>()
+    private fun generallyAllowedForPiece(current: Position): Set<Position> {
+        val allowedOnSameRank = mutableSetOf<Position>()
         for (num in 0 until current.file) allowedOnSameRank.add(Position(num, current.rank))
         for (num in current.file..7) allowedOnSameRank.add(Position(num, current.rank))
-        val allowedOnSameFile = mutableListOf<Position>()
+        val allowedOnSameFile = mutableSetOf<Position>()
         for (num in 0 until current.rank) allowedOnSameFile.add(Position(current.file, num))
         for (num in current.rank..7) allowedOnSameFile.add(Position(current.file, num))
-        return listOf(*allowedOnSameRank.toTypedArray(), *allowedOnSameFile.toTypedArray())
-                .filter { it != current }
+        return setOf(*allowedOnSameRank.toTypedArray(), *allowedOnSameFile.toTypedArray())
+                .filter { it != current }.toSet()
     }
 }
