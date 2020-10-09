@@ -86,15 +86,18 @@ class Board {
     }
 
     override fun toString(): String {
+        val nameOnBoard: (Piece?) -> String = {
+            it?.let { "${it.color.name.substring(0, 1).toLowerCase()}${it.name}" } ?: ""
+        }
         val maxNameLength = grid.flatten()
                 .filterNotNull()
-                .map { it.name.length }
+                .map { it.name.length + 1 }
                 .maxOrNull() ?: 0
         val prefix = (-1 until (grid[0].size)).toList()
                 .joinToString(postfix = "\n", separator = " | ") { "$it".padStart(maxNameLength) }
         return "file by rank, x by y\n" + grid.indices.joinToString(separator = "\n", prefix = prefix) { rankIdx ->
             (-1 until grid[rankIdx].size)
-                    .map { if (it == -1) "$rankIdx".padStart(maxNameLength) else grid[rankIdx][it]?.name ?: "" }
+                    .map { if (it == -1) "$rankIdx".padStart(maxNameLength) else nameOnBoard(grid[rankIdx][it]) }
                     .joinToString(" | ") { it.padEnd(maxNameLength) }
         }
     }
