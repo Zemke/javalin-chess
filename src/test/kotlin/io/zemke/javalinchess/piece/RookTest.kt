@@ -83,4 +83,26 @@ class RookTest {
                 Position(3, 0), Position(3, 1), Position(3, 2),
                 Position(3, 4), Position(3, 5)/*, Position(3, 6), Position(3, 7)*/)
     }
+
+    @Test
+    fun `allowed next positions in a complex situation`() {
+        val board = Board()
+        val rook = Rook(Player("p1"), Color.BLACK, Position(3, 3))
+        board.putPiece(rook)
+        arrayOf(
+                Rook(Player("p2"), Color.WHITE, Position(0, 1)),
+                Rook(Player("p1"), Color.BLACK, Position(4, 5)),
+                Rook(Player("p2"), Color.WHITE, Position(4, 6)),
+                Rook(Player("p1"), Color.BLACK, Position(2, 4)),
+                Rook(Player("p2"), Color.WHITE, Position(2, 3)),
+                Rook(Player("p1"), Color.BLACK, Position(1, 1)),
+                Rook(Player("p2"), Color.WHITE, Position(3, 7)),
+                Rook(Player("p1"), Color.BLACK, Position(2, 0)),
+        ).forEach { board.putPiece(it) }
+        println(board)
+        assertThat(rook.allowedNextPositions(board)).containsExactlyInAnyOrder(
+                Position(3, 2), Position(3, 1), Position(3, 0), Position(4, 3),
+                Position(5, 3), Position(6, 3), Position(7, 3), Position(3, 4),
+                Position(3, 5), Position(3, 6), Position(3, 7), Position(2, 3))
+    }
 }
