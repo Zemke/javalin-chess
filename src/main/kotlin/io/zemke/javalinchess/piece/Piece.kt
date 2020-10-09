@@ -11,4 +11,7 @@ abstract class Piece(val name: String, val player: Player, val color: Color, val
     override fun toString(): String {
         return "Piece(id='$id', name='$name', player=$player, color=$color, position=$position)"
     }
+
+    // todo can be used in some places
+    fun isOwn(color: Color): Boolean = color == this.color
 }
