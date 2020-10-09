@@ -70,6 +70,9 @@ class Board {
         if (grid.flatten().contains(piece)) {
             throw IllegalArgumentException("Piece $piece is already on the Board.")
         }
+        if (getPieceAt(Position(piece.position.rank, piece.position.file)) != null) {
+            throw IllegalArgumentException("Position ${piece.position} is already occupied.")
+        }
         grid[piece.position.rank][piece.position.file] = piece
     }
 
