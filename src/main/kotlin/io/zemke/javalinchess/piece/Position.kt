@@ -29,6 +29,14 @@ class Position(val file: Int, val rank: Int) {
         return "Position(file=$file, rank=$rank)"
     }
 
+    operator fun component1(): Int {
+        return file
+    }
+
+    operator fun component2(): Int {
+        return rank
+    }
+
     companion object {
         fun isValidPosition(file: Int, rank: Int): Boolean = rank in 0..7 && file in 0..7
     }

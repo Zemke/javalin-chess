@@ -53,4 +53,27 @@ class PawnTest {
         assertThat(actual).containsExactlyInAnyOrder(Position(4, 2), Position(3, 2))
     }
 
+    @Test
+    fun `promote to queen`() {
+        val board = Board(false)
+        val position = Position(4, 7)
+        val pawn = Pawn(Color.BLACK, position)
+        board.putPiece(pawn)
+        assertThat(pawn.promotable(board)).isTrue()
+        var queen: Queen? = null
+        pawn.promote(board) { c, p ->
+            queen = Queen(c, p)
+            queen!!
+        }
+        assertThat(board.getPieceAt(position)).isEqualTo(queen)
+    }
+
+    @Test
+    fun `is promotable`() {
+        val board = Board(false)
+        val position = Position(4, 5)
+        val pawn = Pawn(Color.BLACK, position)
+        board.putPiece(pawn)
+        assertThat(pawn.promotable(board)).isFalse()
+    }
 }
