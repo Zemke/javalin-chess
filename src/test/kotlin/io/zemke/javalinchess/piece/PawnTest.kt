@@ -38,4 +38,19 @@ class PawnTest {
         assertThat(actual).containsExactlyInAnyOrder(
                 Position(3, 5), Position(3, 4), Position(4, 5))
     }
+
+    @Test
+    fun `allowed next positions with en passant`() {
+        val pawn = Pawn(Color.WHITE, Position(3, 3))
+        val board = Board(false)
+        board.putPiece(pawn)
+        val passible = Pawn(Color.BLACK, Position(4, 1))
+        board.putPiece(passible)
+        assertThat(passible.allowedNextPositions(board)).contains(Position(4, 3))
+        board.move(passible, Position(4, 3))
+        println(board)
+        val actual = pawn.allowedNextPositions(board)
+        assertThat(actual).containsExactlyInAnyOrder(Position(4, 2), Position(3, 2))
+    }
+
 }

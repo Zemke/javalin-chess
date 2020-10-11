@@ -7,6 +7,7 @@ import io.zemke.javalinchess.piece.Color.WHITE
 class Board {
 
     private val grid: List<MutableList<Piece?>>
+    private val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
@@ -64,6 +65,7 @@ class Board {
                 ?: throw RuntimeException("Position of Piece $this not found")
         grid[target.rank][target.file] = piece
         grid[current.rank][current.file] = null
+        movements.add(piece to target)
         return this
     }
 
@@ -93,6 +95,25 @@ class Board {
         return grid.flatten()
                 .filterNotNull()
                 .filter { it.color != color }
+    }
+
+    /** en passant */
+    fun isPassible(position: Position): Boolean {
+        val piece = getPieceAt(position)
+        if (piece is Pawn && movements.last().first == piece) {
+            val (from, to) = findMovements(piece).last()
+            return piece.isLongLeap(from, to)
+        }
+        return false
+    }
+
+    private fun findMovements(piece: Piece): List<Pair<Position, Position>> {
+        val movements = movements
+                .filter { it.first === piece }
+                .map { it.second }
+                .toMutableList()
+        movements.add(0, piece.position)
+        return movements.zipWithNext()
     }
 
     override fun toString(): String {

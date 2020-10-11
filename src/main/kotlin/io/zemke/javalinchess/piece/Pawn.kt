@@ -1,10 +1,10 @@
 package io.zemke.javalinchess.piece
 
 import io.zemke.javalinchess.controller.Board
+import kotlin.math.abs
 
 class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
 
-    // todo en passant
     // todo promotion
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
@@ -24,8 +24,17 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         if (board.getPieceAt(Position(current.file - 1, fn(current.rank)))?.color == color.other()) {
             allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
+        if (board.isPassible(Position(current.file + 1, current.rank))) {
+            allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
+        }
+        if (board.isPassible(Position(current.file - 1, current.rank))) {
+            allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
+        }
         return allowedNextPositions
     }
+
+    fun isLongLeap(from: Position, to: Position): Boolean =
+            from.file == to.file && abs(from.rank - to.rank) == 2
 
     private fun longLeapAllowed(): Boolean =
             (color == Color.BLACK && position.rank == 1)
