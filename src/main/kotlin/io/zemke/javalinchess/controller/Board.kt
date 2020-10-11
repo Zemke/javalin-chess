@@ -49,7 +49,10 @@ class Board {
                     .filterNotNull()
                     .find { it.id == pieceId }
 
-    fun findPositionOfPiece(piece: Piece): Position? {
+    /**
+     * @throws RuntimeException When the Piece could not be found on the Board.
+     */
+    fun findPositionOfPiece(piece: Piece): Position {
         grid.forEachIndexed { rankIdx, rank ->
             rank.forEachIndexed { idx, f ->
                 if (f == piece) {
@@ -57,12 +60,11 @@ class Board {
                 }
             }
         }
-        return null
+        throw RuntimeException("Position of Piece $this not found")
     }
 
     fun move(piece: Piece, target: Position): Board {
         val current = findPositionOfPiece(piece)
-                ?: throw RuntimeException("Position of Piece $this not found")
         grid[target.rank][target.file] = piece
         grid[current.rank][current.file] = null
         movements.add(piece to target)

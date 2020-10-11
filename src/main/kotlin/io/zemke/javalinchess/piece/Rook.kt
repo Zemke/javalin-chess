@@ -6,7 +6,6 @@ class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
-                ?: throw RuntimeException("Position of Figure $this not found")
         val allowedOnEmptyBoard = generallyAllowedForPiece(current)
         val result = mutableSetOf(*allowedOnEmptyBoard.toTypedArray())
 

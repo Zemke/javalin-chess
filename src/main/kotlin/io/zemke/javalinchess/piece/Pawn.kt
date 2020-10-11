@@ -8,7 +8,6 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
     // todo promotion
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
-                ?: throw RuntimeException("Position of Piece $this not found")
         val fn = if (color == Color.BLACK) Int::inc else Int::dec
         val allowedNextPositions =
                 if (longLeapAllowed()) {

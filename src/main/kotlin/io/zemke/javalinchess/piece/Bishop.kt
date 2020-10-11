@@ -6,7 +6,6 @@ class Bishop(color: Color, position: Position) : Piece("Bishop", color, position
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
-                ?: throw IllegalArgumentException("Piece $this is not on board.")
         return setOf(
                 *addPositions(board, current, Int::inc, Int::inc),
                 *addPositions(board, current, Int::dec, Int::dec),
