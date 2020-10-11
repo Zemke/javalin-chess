@@ -109,12 +109,14 @@ class Board {
         return false
     }
 
-    private fun findMovements(piece: Piece): List<Pair<Position, Position>> {
+    fun findMovements(piece: Piece): List<Pair<Position, Position>> {
         val movements = movements
                 .filter { it.first === piece }
                 .map { it.second }
                 .toMutableList()
-        movements.add(0, piece.position)
+        if (movements.isNotEmpty()) {
+            movements.add(0, piece.position)
+        }
         return movements.zipWithNext()
     }
 
