@@ -39,6 +39,10 @@ class Board {
         }
     }
 
+    constructor(board: Board) {
+        grid = listOf(*board.grid.toTypedArray())
+    }
+
     fun findPieceById(pieceId: String): Piece? =
             grid.flatten()
                     .filterNotNull()
@@ -67,12 +71,14 @@ class Board {
         return grid[position.rank][position.file]
     }
 
-    fun putPiece(piece: Piece) {
-        if (grid.flatten().contains(piece)) {
-            throw IllegalArgumentException("Piece $piece is already on the Board.")
-        }
-        if (getPieceAt(piece.position) != null) {
-            throw IllegalArgumentException("Position ${piece.position} is already occupied.")
+    fun putPiece(piece: Piece, force: Boolean = false) {
+        if (!force) {
+            if (grid.flatten().contains(piece)) {
+                throw IllegalArgumentException("Piece $piece is already on the Board.")
+            }
+            if (getPieceAt(piece.position) != null) {
+                throw IllegalArgumentException("Position ${piece.position} is already occupied.")
+            }
         }
         grid[piece.position.rank][piece.position.file] = piece
     }
@@ -104,5 +110,20 @@ class Board {
                     .map { if (it == -1) "$rankIdx".padStart(maxNameLength) else nameOnBoard(grid[rankIdx][it]) }
                     .joinToString(" | ") { it.padEnd(maxNameLength) }
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Board
+
+        if (grid != other.grid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return grid.hashCode()
     }
 }
