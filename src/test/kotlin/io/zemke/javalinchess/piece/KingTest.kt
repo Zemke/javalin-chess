@@ -68,4 +68,38 @@ class KingTest {
         assertThat(board.getPieceAt(Position(7, 0))).isEqualTo(rookKingside)
         assertThat(board.getPieceAt(Position(3, 0))).isEqualTo(rookQueenside)
     }
+
+    @Test
+    fun `is in check`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(kingInCheck.checkmated(board)).isFalse()
+    }
+
+    @Test
+    fun `is not in check because own Piece`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.BLACK, Position(3, 0)))
+        assertThat(kingInCheck.inCheck(board)).isFalse()
+        assertThat(kingInCheck.checkmated(board)).isFalse()
+    }
+
+    @Test
+    fun `is not checkmated`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
+        board.putPiece(Rook(Color.WHITE, Position(0, 3)))
+        board.putPiece(Queen(Color.WHITE, Position(1, 1)))
+        board.putPiece(Bishop(Color.WHITE, Position(5, 1)))
+        println(board)
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(kingInCheck.checkmated(board)).isTrue()
+    }
 }

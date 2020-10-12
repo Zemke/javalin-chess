@@ -46,6 +46,18 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
         }
     }
 
+    fun inCheck(board: Board): Boolean {
+        return board.opponentPieces(color)
+                .map { it.allowedNextPositions(board) }
+                .flatten()
+                .contains(board.findPositionOfPiece(this))
+    }
+
+    fun checkmated(board: Board): Boolean {
+        return allowedNextPositions(board)
+                .all { inCheck(Board(board).move(this@King, it)) }
+    }
+
     class InvalidCastlingException(message: String) : RuntimeException(message)
 }
 
