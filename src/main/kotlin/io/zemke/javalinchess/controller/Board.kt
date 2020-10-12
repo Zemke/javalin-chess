@@ -87,6 +87,10 @@ class Board {
         grid[piece.position.rank][piece.position.file] = piece
     }
 
+    fun putPieces(vararg pieces: Piece, force: Boolean = false) {
+        pieces.forEach { putPiece(it, force) }
+    }
+
     fun ownPieces(color: Color): List<Piece> {
         return grid.flatten()
                 .filterNotNull()

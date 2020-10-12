@@ -71,6 +71,30 @@ class KingTest {
     }
 
     @Test
+    fun `King mustn't move through check when castling queenside`() {
+        val board = Board(false)
+        val king = King(Color.BLACK, Position(4, 0))
+        val rookQueenside = Rook(Color.BLACK, Position(0, 0))
+        val rookKingside = Rook(Color.BLACK, Position(7, 0))
+        val opponentRook = Rook(Color.WHITE, Position(3, 4))
+        board.putPieces(king, rookQueenside, rookKingside, opponentRook)
+        println(board)
+        assertThat(king.castlingAllowed(board, rookQueenside)).isFalse()
+    }
+
+    @Test
+    fun `King mustn't move through check when castling kingside`() {
+        val board = Board(false)
+        val king = King(Color.BLACK, Position(4, 0))
+        val rookQueenside = Rook(Color.BLACK, Position(0, 0))
+        val rookKingside = Rook(Color.BLACK, Position(7, 0))
+        val opponentRook = Rook(Color.WHITE, Position(5, 0))
+        board.putPieces(king, rookQueenside, rookKingside, opponentRook)
+        println(board)
+        assertThat(king.castlingAllowed(board, rookKingside)).isFalse()
+    }
+
+    @Test
     fun `is in check`() {
         val board = Board(false)
         val kingInCheck = King(Color.BLACK, Position(3, 3))

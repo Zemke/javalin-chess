@@ -23,12 +23,21 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
     }
 
     fun castlingAllowed(board: Board, rook: Rook): Boolean {
-        val positionsBetween =
-                if (position.file > rook.position.file) rook.position.file - 1 downTo position.file + 1
-                else position.file + 1 downTo rook.position.file - 1
-        return positionsBetween.none { board.getPieceAt(Position(position.rank, it)) != null }
+        val queenside = position.file > rook.position.file
+        val kingPositions: List<Position>
+        val rookPositions: List<Position>
+        if (queenside) {
+            rookPositions = (1..3).map { Position(it, position.rank) }
+            kingPositions = (3 downTo 2).map { Position(it, position.rank) }
+        } else {
+            rookPositions = (6 downTo 5).map { Position(it, position.rank) }
+            kingPositions = (5..6).map { Position(it, position.rank) }
+        }
+        return rookPositions.none { board.getPieceAt(it) != null }
+                && kingPositions.none { board.getPieceAt(it) != null }
+                && kingPositions.none { inCheck(Board(board).move(this, it)) }
                 && board.findMovements(rook).isEmpty() && board.findMovements(this).isEmpty()
-        // TODO One may not castle out of, through, or into check.
+                && !inCheck(board)
     }
 
     fun castle(board: Board, rook: Rook) {
