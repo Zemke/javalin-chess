@@ -60,7 +60,7 @@ class Board {
                 }
             }
         }
-        throw RuntimeException("Position of Piece $this not found")
+        throw RuntimeException("Position of Piece $piece not found")
     }
 
     fun move(piece: Piece, target: Position): Board {
