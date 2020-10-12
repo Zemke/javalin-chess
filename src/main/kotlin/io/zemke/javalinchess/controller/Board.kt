@@ -41,7 +41,7 @@ class Board {
     }
 
     constructor(board: Board) {
-        grid = listOf(*board.grid.toTypedArray())
+        grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
     }
 
     fun findPieceById(pieceId: String): Piece? =
