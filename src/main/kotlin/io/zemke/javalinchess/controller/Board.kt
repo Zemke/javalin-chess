@@ -90,7 +90,7 @@ class Board {
     fun ownPieces(color: Color): List<Piece> {
         return grid.flatten()
                 .filterNotNull()
-                .filter { it.color == color }
+                .filter { it.isOwn(color) }
     }
 
     fun opponentPieces(color: Color): List<Piece> {

@@ -34,7 +34,7 @@ class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
             }
             val pieceAtPos = board.getPieceAt(subjectPosition)
             if (pieceAtPos != null) {
-                if (pieceAtPos.color == color) {
+                if (pieceAtPos.isOwn(color)) {
                     val progressionToRemove = IntProgression.fromClosedRange(
                             fileOrRank, progression.last, if (ascending) +1 else -1)
                     when (checkOnRank) {

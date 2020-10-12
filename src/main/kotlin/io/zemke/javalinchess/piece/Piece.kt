@@ -11,6 +11,5 @@ abstract class Piece(val name: String, val color: Color, val position: Position)
         return "Piece(id='$id', name='$name', color=$color, position=$position)"
     }
 
-    // todo can be used in some places
     fun isOwn(color: Color): Boolean = color == this.color
 }
