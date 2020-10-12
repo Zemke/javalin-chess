@@ -16,7 +16,10 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
                 Position(current.file - 1, current.rank + 1),
                 Position(current.file + 1, current.rank - 1),
                 Position(current.file + 1, current.rank + 1),
-        ).filter { !ownPieces.contains(it) }.toSet()
+        )
+                .filter { !ownPieces.contains(it) }
+                .filter { !inCheck(Board(board).move(this, it)) }
+                .toSet()
     }
 
     fun castlingAllowed(board: Board, rook: Rook): Boolean {
