@@ -95,6 +95,21 @@ class KingTest {
     }
 
     @Test
+    fun `King mustn't castle when the involved rook or King itself have already moved`() {
+        val board = Board(false)
+        val rookQueenside = Rook(Color.BLACK, Position(0, 0))
+        val rookKingside = Rook(Color.BLACK, Position(7, 0))
+        val king = King(Color.BLACK, Position(4, 0))
+        board.putPieces(rookQueenside, rookKingside, king)
+        board.move(rookQueenside, Position(0, 3)).move(rookQueenside, Position(0, 0))
+        assertThat(king.castlingAllowed(board, rookQueenside)).isFalse()
+        assertThat(king.castlingAllowed(board, rookKingside)).isTrue()
+        board.move(king, Position(4, 1)).move(king, Position(4, 0))
+        assertThat(king.castlingAllowed(board, rookQueenside)).isFalse()
+        assertThat(king.castlingAllowed(board, rookKingside)).isFalse()
+    }
+
+    @Test
     fun `is in check`() {
         val board = Board(false)
         val kingInCheck = King(Color.BLACK, Position(3, 3))
