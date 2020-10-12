@@ -7,7 +7,6 @@ import kotlin.math.abs
 
 class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
 
-    // todo promotion
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
         val fn = if (color == BLACK) Int::inc else Int::dec
