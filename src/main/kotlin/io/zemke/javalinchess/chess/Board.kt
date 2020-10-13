@@ -3,11 +3,14 @@ package io.zemke.javalinchess.chess
 import io.zemke.javalinchess.chess.piece.*
 import io.zemke.javalinchess.chess.piece.Color.BLACK
 import io.zemke.javalinchess.chess.piece.Color.WHITE
+import io.zemke.javalinchess.complex.Entity
 
-class Board {
+class Board : Entity {
 
     private val grid: List<MutableList<Piece?>>
     private val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
+    var nextTurn: Color = WHITE
+        private set
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
@@ -69,6 +72,10 @@ class Board {
         grid[current.rank][current.file] = null
         movements.add(piece to target)
         return this
+    }
+
+    fun nextTurn() {
+        this.nextTurn = this.nextTurn.other()
     }
 
     fun getPieceAt(position: Position): Piece? {

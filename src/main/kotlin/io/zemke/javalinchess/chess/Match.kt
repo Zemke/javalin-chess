@@ -5,5 +5,4 @@ import io.zemke.javalinchess.complex.Entity
 
 class Match(
         val board: Board,
-        val nextTurn: Color,
 ) : Entity()
