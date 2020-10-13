@@ -6,8 +6,8 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.InternalServerErrorResponse
 import io.javalin.plugin.json.JavalinJson
 import io.zemke.javalinchess.chess.Board
-import io.zemke.javalinchess.chess.piece.Color
 import io.zemke.javalinchess.chess.piece.Color.BLACK
+import io.zemke.javalinchess.chess.piece.Color.WHITE
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.view.model.TurnDto
 
@@ -41,15 +41,13 @@ fun main() {
                             throw BadRequestResponse("Piece $piece cannot move to ${turn.target}")
                         }
                         val auth = it.header("auth")
-                        if (piece.color == BLACK && board.uuidBlack != null && auth != board.uuidBlack) {
+                        if (!isAuth(board, auth)) {
                             throw BadRequestResponse(
-                                    "Black requested with $auth but requested with ${board.uuidBlack}.")
+                                    "${board.nextTurn} UUID expected " +
+                                            "${if (board.nextTurn == BLACK) board.uuidBlack else board.uuidWhite} " +
+                                            "but given is $auth.")
                         }
-                        if (piece.color == Color.WHITE && board.uuidWhite != null && auth != board.uuidWhite) {
-                            throw BadRequestResponse(
-                                    "White requested with $auth but requested with ${board.uuidWhite}.")
-                        }
-                        if (piece.color == BLACK && board.uuidBlack == null) {
+                        if (board.nextTurn == BLACK && board.uuidBlack == null) {
                             board.uuidBlack = auth
                         }
                         board.move(piece, turn.target)
@@ -60,3 +58,7 @@ fun main() {
         }
     }
 }
+
+private fun isAuth(board: Board, auth: String?) =
+        (board.nextTurn == BLACK && (auth == board.uuidBlack || board.uuidBlack == null)
+                || board.nextTurn == WHITE && (auth == board.uuidWhite || board.uuidWhite == null))
