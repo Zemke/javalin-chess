@@ -11,6 +11,8 @@ class Board : Entity {
     private val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
     var nextTurn: Color = WHITE
         private set
+    var uuidWhite: String? = null
+    var uuidBlack: String? = null
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
