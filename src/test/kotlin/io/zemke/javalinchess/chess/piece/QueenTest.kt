@@ -1,6 +1,6 @@
-package io.zemke.javalinchess.piece
+package io.zemke.javalinchess.chess.piece
 
-import io.zemke.javalinchess.controller.Board
+import io.zemke.javalinchess.chess.Board
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

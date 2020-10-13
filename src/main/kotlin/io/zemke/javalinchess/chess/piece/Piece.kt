@@ -1,7 +1,7 @@
-package io.zemke.javalinchess.piece
+package io.zemke.javalinchess.chess.piece
 
-import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.controller.Entity
+import io.zemke.javalinchess.chess.Board
+import io.zemke.javalinchess.complex.Entity
 
 abstract class Piece(val name: String, val color: Color, val position: Position) : Entity() {
 

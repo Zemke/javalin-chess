@@ -1,8 +1,8 @@
-package io.zemke.javalinchess.controller
+package io.zemke.javalinchess.chess
 
-import io.zemke.javalinchess.piece.Color
-import io.zemke.javalinchess.piece.Position
-import io.zemke.javalinchess.piece.Rook
+import io.zemke.javalinchess.chess.piece.Color
+import io.zemke.javalinchess.chess.piece.Position
+import io.zemke.javalinchess.chess.piece.Rook
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 

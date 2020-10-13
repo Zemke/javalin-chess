@@ -1,6 +1,6 @@
-package io.zemke.javalinchess.piece
+package io.zemke.javalinchess.chess.piece
 
-import io.zemke.javalinchess.controller.Board
+import io.zemke.javalinchess.chess.Board
 
 class Knight(color: Color, position: Position) : Piece("Knight", color, position) {
 

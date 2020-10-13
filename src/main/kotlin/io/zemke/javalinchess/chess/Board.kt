@@ -1,8 +1,8 @@
-package io.zemke.javalinchess.controller
+package io.zemke.javalinchess.chess
 
-import io.zemke.javalinchess.piece.*
-import io.zemke.javalinchess.piece.Color.BLACK
-import io.zemke.javalinchess.piece.Color.WHITE
+import io.zemke.javalinchess.chess.piece.*
+import io.zemke.javalinchess.chess.piece.Color.BLACK
+import io.zemke.javalinchess.chess.piece.Color.WHITE
 
 class Board {
 

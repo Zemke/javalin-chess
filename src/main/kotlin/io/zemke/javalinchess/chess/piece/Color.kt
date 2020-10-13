@@ -1,4 +1,4 @@
-package io.zemke.javalinchess.piece
+package io.zemke.javalinchess.chess.piece
 
 enum class Color {
     WHITE, BLACK;

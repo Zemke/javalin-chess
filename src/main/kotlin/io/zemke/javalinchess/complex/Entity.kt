@@ -1,4 +1,4 @@
-package io.zemke.javalinchess.controller
+package io.zemke.javalinchess.complex
 
 import java.io.Serializable
 import java.util.*

@@ -6,9 +6,10 @@ import io.javalin.http.BadRequestResponse
 import io.javalin.http.InternalServerErrorResponse
 import io.javalin.plugin.json.JavalinJson
 import io.zemke.javalinchess.complex.Memcached
-import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.controller.Match
-import io.zemke.javalinchess.piece.Color
+import io.zemke.javalinchess.chess.Board
+import io.zemke.javalinchess.chess.Match
+import io.zemke.javalinchess.chess.piece.Color
+import io.zemke.javalinchess.view.model.TurnDto
 
 fun main() {
     val app = Javalin.create().start(7000)

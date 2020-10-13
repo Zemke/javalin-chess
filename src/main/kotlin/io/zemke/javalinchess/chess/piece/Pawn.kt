@@ -1,8 +1,8 @@
-package io.zemke.javalinchess.piece
+package io.zemke.javalinchess.chess.piece
 
-import io.zemke.javalinchess.controller.Board
-import io.zemke.javalinchess.piece.Color.BLACK
-import io.zemke.javalinchess.piece.Color.WHITE
+import io.zemke.javalinchess.chess.Board
+import io.zemke.javalinchess.chess.piece.Color.BLACK
+import io.zemke.javalinchess.chess.piece.Color.WHITE
 import kotlin.math.abs
 
 class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
