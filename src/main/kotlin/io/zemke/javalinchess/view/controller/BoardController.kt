@@ -19,6 +19,7 @@ object BoardController {
             true -> ctx.json(board)
             else -> throw InternalServerErrorResponse()
         }
+        ctx.status(201)
     }
 
     fun get(ctx: Context) {
