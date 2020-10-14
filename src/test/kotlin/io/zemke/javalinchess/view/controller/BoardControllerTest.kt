@@ -27,7 +27,7 @@ class BoardControllerTest {
     @Test
     fun `POST creates valid board`() {
         val ctx = mockk<Context>(relaxed = true)
-        every { ctx.header(eq("auth")) } returns UUID.randomUUID().toString()
+        every { ctx.header("auth") } returns UUID.randomUUID().toString()
         val boardIdSlot = slot<String>()
         val boardSlot = slot<Board>()
         val resJsonSlot = slot<Board>()
