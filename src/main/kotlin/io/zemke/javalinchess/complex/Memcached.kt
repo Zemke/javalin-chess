@@ -2,10 +2,11 @@ package io.zemke.javalinchess.complex
 
 import net.rubyeye.xmemcached.XMemcachedClient
 
+class Memcached {
 
-object Memcached {
-
-    private var client: XMemcachedClient = XMemcachedClient("localhost", 11211)
+    private val client: XMemcachedClient by lazy {
+        XMemcachedClient("localhost", 11211)
+    }
 
     fun store(key: String, obj: Any): Boolean {
         client[key, 3600] = obj
