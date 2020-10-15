@@ -196,6 +196,7 @@
                     <forceAjcCompile>true</forceAjcCompile>
                     <weaveDirectories>
                         <weaveDirectory>${project.build.outputDirectory}</weaveDirectory>
+                        <weaveDirectory>${project.build.testOutputDirectory}</weaveDirectory>
                     </weaveDirectories>
                 </configuration>
                 <executions>
