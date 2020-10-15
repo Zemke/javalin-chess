@@ -9,6 +9,8 @@ import org.aspectj.lang.annotation.Pointcut
 @Aspect
 class ZemkeAspect {
 
+    private val singletons = mutableListOf<Any>()
+
     @Pointcut("execution((@io.zemke.javalinchess.aspectj.annotations.Zemke *).new())")
     fun pointcut() {
     }
@@ -22,9 +24,15 @@ class ZemkeAspect {
                 val isAccessible = it.isAccessible
                 it.isAccessible = true
                 if (it.get(jp.target!!) == null) {
-                    // todo #di retrieve injectable from container
-                    //  so that it's actually a singleton
-                    it.set(jp.target!!, it.type.newInstance())
+                    val alreadyInstantiated = singletons
+                            .find { singleton -> singleton.javaClass == it.type }
+                    if (alreadyInstantiated != null) {
+                        it.set(jp.target!!, alreadyInstantiated)
+                    } else {
+                        val newInstance = it.type.newInstance()
+                        singletons.add(newInstance)
+                        it.set(jp.target!!, newInstance)
+                    }
                 }
                 it.isAccessible = isAccessible
             }
