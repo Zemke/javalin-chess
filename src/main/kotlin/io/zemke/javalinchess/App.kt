@@ -11,7 +11,8 @@ fun main() {
     JavalinChess().run()
 }
 
-class JavalinChess @Zemke constructor() {
+@Zemke
+class JavalinChess {
 
     @Inject
     private lateinit var boardController: BoardController

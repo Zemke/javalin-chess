@@ -7,7 +7,8 @@ import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.chess.Board
 import io.zemke.javalinchess.complex.Memcached
 
-class BoardController @Zemke constructor() {
+@Zemke
+class BoardController {
 
     @Inject
     private lateinit var memcached: Memcached

@@ -11,7 +11,8 @@ import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.view.ViewUtil
 import io.zemke.javalinchess.view.model.TurnDto
 
-class TurnController @Zemke constructor() {
+@Zemke
+class TurnController {
 
     @Inject
     private lateinit var memcached: Memcached

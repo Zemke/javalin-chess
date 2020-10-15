@@ -1,7 +1,6 @@
 package io.zemke.javalinchess.aspectj.aspect
 
 import io.zemke.javalinchess.aspectj.annotations.Inject
-import io.zemke.javalinchess.aspectj.annotations.Zemke
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
@@ -10,12 +9,12 @@ import org.aspectj.lang.annotation.Pointcut
 @Aspect
 class ZemkeAspect {
 
-    @Pointcut("@annotation(zemke)")
-    fun callAt(zemke: Zemke?) {
+    @Pointcut("execution((@io.zemke.javalinchess.aspectj.annotations.Zemke *).new())")
+    fun pointcut() {
     }
 
-    @After(value = "callAt(zemke)", argNames = "jp,zemke")
-    fun after(jp: JoinPoint, zemke: Zemke?) {
+    @After(value = "pointcut()", argNames = "jp")
+    fun advice(jp: JoinPoint) {
         if (jp.target == null) return
         jp.target.javaClass.declaredFields.forEach {
             val inj = it.declaredAnnotations.toList().filterIsInstance<Inject>()
