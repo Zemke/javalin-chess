@@ -40,6 +40,7 @@ class TurnController {
         }
         board.move(piece, turn.target)
         board.nextTurn()
-
+        ctx.status(201)
+        ctx.json(board)
     }
 }
