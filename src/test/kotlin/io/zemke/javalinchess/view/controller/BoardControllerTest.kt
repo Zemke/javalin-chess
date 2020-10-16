@@ -36,6 +36,7 @@ class BoardControllerTest {
         boardController.create(ctx)
         assertThat(boardIdSlot.captured).isEqualTo(resJsonSlot.captured.id)
         assertThat(boardSlot.captured).isEqualTo(resJsonSlot.captured)
+        assertThat(boardSlot.captured).isEqualTo(Board(true))
         verify { ctx.status(201) }
     }
 }
