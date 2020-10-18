@@ -39,5 +39,8 @@ class Position(val file: Int, val rank: Int) {
 
     companion object {
         fun isValidPosition(file: Int, rank: Int): Boolean = rank in 0..7 && file in 0..7
+
+        fun ifValid(file: Int, rank: Int): Position? =
+                if (isValidPosition(file, rank)) Position(file, rank) else null
     }
 }

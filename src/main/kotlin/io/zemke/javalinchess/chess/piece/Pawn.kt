@@ -18,16 +18,20 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
                 } else {
                     mutableSetOf(Position(current.file, fn(current.rank)))
                 }
-        if (board.getPieceAt(Position(current.file + 1, fn(current.rank)))?.color == color.other()) {
+        var checkPosition = Position.ifValid(current.file + 1, fn(current.rank))
+        if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
             allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
         }
-        if (board.getPieceAt(Position(current.file - 1, fn(current.rank)))?.color == color.other()) {
+        checkPosition = Position.ifValid(current.file - 1, fn(current.rank))
+        if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
             allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
-        if (board.isPassible(Position(current.file + 1, current.rank))) {
+        checkPosition = Position.ifValid(current.file + 1, current.rank)
+        if (checkPosition != null && board.isPassible(checkPosition)) {
             allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
         }
-        if (board.isPassible(Position(current.file - 1, current.rank))) {
+        checkPosition = Position.ifValid(current.file - 1, current.rank)
+        if (checkPosition != null && board.isPassible(checkPosition)) {
             allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
         return allowedNextPositions
