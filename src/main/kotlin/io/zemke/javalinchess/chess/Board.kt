@@ -115,7 +115,7 @@ class Board : Entity {
     /** en passant */
     fun isPassible(position: Position): Boolean {
         val piece = getPieceAt(position)
-        if (piece is Pawn && movements.last().first == piece) {
+        if (piece is Pawn && movements.isNotEmpty() && movements.last().first == piece) {
             val (from, to) = findMovements(piece).last()
             return piece.isLongLeap(from, to)
         }
