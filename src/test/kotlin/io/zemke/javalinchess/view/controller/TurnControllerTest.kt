@@ -44,7 +44,7 @@ class TurnControllerTest {
         val boardSlot = slot<Board>()
         every { ctx.json(capture(boardSlot)) } returns ctx
         turnController.create(ctx)
-        assertThat(boardSlot.captured).isEqualTo(Board(board).move(piece, target))
+        assertThat(boardSlot.captured).isEqualTo(Board(true).move(piece, target))
         assertThat(boardSlot.captured.nextTurn).isEqualTo(Color.BLACK)
         verify { ctx.status(201) }
     }
