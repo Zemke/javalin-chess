@@ -32,8 +32,6 @@ class TurnControllerTest {
 
     @Test
     fun `POST new turn`() {
-        // todo https://github.com/mockk/mockk/issues/502
-        //  I was never able to get this test to run
         val ctx = mockk<Context>(relaxed = true)
         val board = Board(true)
         board.uuidWhite = authUuid
