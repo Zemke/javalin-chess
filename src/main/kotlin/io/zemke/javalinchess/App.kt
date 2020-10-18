@@ -2,6 +2,7 @@ package io.zemke.javalinchess
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.plugin.rendering.vue.VueComponent
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.view.controller.BoardController
@@ -21,15 +22,20 @@ class JavalinChess {
     private lateinit var turnController: TurnController
 
     fun run() {
-        val app = Javalin.create().start(7000)
-        app.get("/") { ctx -> ctx.result("Hello World") }
+        val app = Javalin.create { config ->
+            config.enableWebjars()
+        }.start(7000)
+        app.get("/", VueComponent("<hello-world></hello-world>"))
         app.routes {
-            path("board") {
-                post(boardController::create)
-                path(":key") {
-                    get(boardController::get)
-                    path("turn") {
-                        post(turnController::create)
+            path("api") {
+                get("/") { ctx -> ctx.result("Hello World") }
+                path("board") {
+                    post(boardController::create)
+                    path(":key") {
+                        get(boardController::get)
+                        path("turn") {
+                            post(turnController::create)
+                        }
                     }
                 }
             }
