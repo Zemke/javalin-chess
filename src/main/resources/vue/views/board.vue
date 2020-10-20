@@ -1,6 +1,5 @@
 <template id="board">
   <div>
-    <h1>{{'Javalin Chess' | capitalize}}</h1>
     <div class="board" v-if="board != null">
       <div v-for="rank in board.grid" class="rank">
         <div v-for="piece in rank" class="piece">
@@ -55,8 +54,10 @@
   }
 
   .board {
-    margin: auto;
+    margin: 5rem auto;
     width: 36rem;
+    box-shadow: 0 0 5rem #828282;
+    border-radius: .5rem;
   }
 
   .rank {

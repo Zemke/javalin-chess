@@ -24,6 +24,7 @@ class JavalinChess {
     fun run() {
         val app = Javalin.create { config ->
             config.enableWebjars()
+            config.addStaticFiles("/public")
         }.start(7000)
         app.get("/", VueComponent("<board></board>"))
         app.routes {
