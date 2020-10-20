@@ -1,10 +1,10 @@
 <template id="board">
   <div>
-    <h1>Javalin Chess</h1>
-    <div class="board">
-      <div v-if="board != null" v-for="rank in board.grid" class="rank">
+    <h1>{{'Javalin Chess' | capitalize}}</h1>
+    <div class="board" v-if="board != null">
+      <div v-for="rank in board.grid" class="rank">
         <div v-for="piece in rank" class="piece">
-          <div v-if="piece != null">{{piece.color[0]}}{{piece.name}}</div>
+          <div v-if="piece != null">{{piece | piece}}</div>
           <div v-if="piece == null">&nbsp;</div>
         </div>
       </div>
@@ -14,6 +14,31 @@
 <script>
   Vue.component("board", {
     template: "#board",
+    filters: {
+      piece: function (piece) {
+        if (piece.color === 'WHITE') {
+          switch (piece.name.toLowerCase()) {
+            case 'pawn': return '♙';
+            case 'rook': return '♖';
+            case 'queen': return '♕';
+            case 'knight': return '♘';
+            case 'bishop': return '♗';
+            case 'king': return '♔';
+            default: return `${piece.color[0]}${piece.name}`;
+          }
+        } else if (piece.color === 'BLACK') {
+          switch (piece.name.toLowerCase()) {
+            case 'pawn': return '♟';
+            case 'rook': return '♜';
+            case 'queen': return '♛';
+            case 'knight': return '♞';
+            case 'bishop': return '♝';
+            case 'king': return '♚';
+            default: return `${piece.color[0]}${piece.name}`;
+          }
+        }
+      }
+    },
     data: () => ({
       board: null,
     }),
@@ -49,6 +74,7 @@
     justify-content: center;
     align-items: center;
     align-content: center;
+    font-size: 2.5rem;
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
