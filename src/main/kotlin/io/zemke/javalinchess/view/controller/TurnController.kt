@@ -3,6 +3,7 @@ package io.zemke.javalinchess.view.controller
 import io.javalin.http.BadRequestResponse
 import io.javalin.http.Context
 import io.javalin.plugin.json.JavalinJson
+import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.chess.Board
@@ -17,7 +18,8 @@ class TurnController {
     @Inject
     private lateinit var memcached: Memcached
 
-    fun create(ctx: Context) {
+    fun create(_ctx: Context) {
+        val ctx = DelegationContext(_ctx)
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
         val turn = JavalinJson.fromJson(ctx.body(), TurnDto::class.java)
         val piece = board.findPieceById(turn.piece)
