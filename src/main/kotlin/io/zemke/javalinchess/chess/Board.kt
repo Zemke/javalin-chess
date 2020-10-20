@@ -7,8 +7,8 @@ import io.zemke.javalinchess.complex.Entity
 
 class Board : Entity {
 
-    private val grid: List<MutableList<Piece?>>
-    private val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
+    val grid: List<MutableList<Piece?>>
+    val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
     var nextTurn: Color = WHITE
         private set
     var uuidWhite: String? = null

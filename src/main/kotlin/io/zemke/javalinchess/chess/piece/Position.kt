@@ -1,6 +1,8 @@
 package io.zemke.javalinchess.chess.piece
 
-class Position(val file: Int, val rank: Int) {
+import java.io.Serializable
+
+class Position(val file: Int, val rank: Int) : Serializable {
 
     init {
         if (!isValidPosition(file, rank))

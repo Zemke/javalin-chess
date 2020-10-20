@@ -25,7 +25,7 @@ class JavalinChess {
         val app = Javalin.create { config ->
             config.enableWebjars()
         }.start(7000)
-        app.get("/", VueComponent("<hello-world></hello-world>"))
+        app.get("/", VueComponent("<board></board>"))
         app.routes {
             path("api") {
                 get("/") { ctx -> ctx.result("Hello World") }
