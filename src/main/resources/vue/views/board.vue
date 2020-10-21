@@ -1,6 +1,6 @@
 <template id="board">
   <div>
-    <pre>{{allowedNextPositions}}</pre>
+    <pre v-if="debug">{{allowedNextPositions}}</pre>
     <div class="board" v-if="board != null">
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
