@@ -5,11 +5,18 @@
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
              v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx) }">
-          <button v-if="piece != null" v-on:click="select(piece)">
+          <button v-if="piece != null"
+                  v-on:click="isAllowedNextPosition(fileIdx, rankIdx) ? move(fileIdx, rankIdx) : select(piece)">
             {{piece | piece}}
           </button>
+          <button v-if="piece == null && isAllowedNextPosition(fileIdx, rankIdx)"
+                  v-on:click="move(fileIdx, rankIdx)">
+            &nbsp;
+          </button>
           <span v-if="debug">
-            {{fileIdx}}:{{rankIdx}}:{{isAllowedNextPosition(fileIdx, rankIdx) ? 'Y' : 'N'}}
+            {{fileIdx}},{{rankIdx}}
+            :{{isAllowedNextPosition(fileIdx, rankIdx) ? 'npY' : 'npN'}}
+            :{{selected.id === piece?.id ? 'sY' : 'sN'}}
           </span>
         </div>
       </div>
@@ -52,6 +59,7 @@
       board: null,
       allowedNextPositions: [],
       debug: new URLSearchParams(location.search).get('debug') != null,
+      selected: {},
     }),
     created() {
       fetch("api/board", {method: 'POST'})
@@ -60,9 +68,22 @@
     },
     methods: {
       select(piece) {
+        this.selected = piece;
         fetch(`api/board/${this.board.id}/piece/${piece.id}/allowed-next-positions`)
           .then(res => res.json())
           .then(res => this.allowedNextPositions = res)
+      },
+      move(file, rank) {
+        const piece = this.selected;
+        fetch(
+          `api/board/${this.board.id}/turn`,
+          {
+            method: 'POST',
+            body: JSON.stringify({piece: piece.id, target: {file, rank}}),
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(res => res.json())
+          .then(res => this.board = res);
       },
       isAllowedNextPosition(file, rank) {
         return !!this.allowedNextPositions
@@ -112,6 +133,15 @@
   .piece.allowedNextPosition {
     box-shadow: 5px 5px 10px black;
     z-index: 1;
+    transition: transform .5s ease-out;
+  }
+
+  .piece.allowedNextPosition button {
+    padding: 0 1.3rem;
+  }
+
+  .piece.allowedNextPosition:hover {
+    transform: scale(1.2);
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
