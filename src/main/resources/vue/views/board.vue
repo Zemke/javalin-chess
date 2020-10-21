@@ -8,6 +8,9 @@
           <button v-if="piece != null" v-on:click="select(piece)">
             {{piece | piece}}
           </button>
+          <span v-if="debug">
+            {{fileIdx}}:{{rankIdx}}:{{isAllowedNextPosition(fileIdx, rankIdx) ? 'Y' : 'N'}}
+          </span>
         </div>
       </div>
     </div>
@@ -50,7 +53,8 @@
     },
     data: () => ({
       board: null,
-      allowedNextPositions: []
+      allowedNextPositions: [],
+      debug: new URLSearchParams(location.search).get('debug') != null,
     }),
     created() {
       fetch("api/board", {method: 'POST'})
