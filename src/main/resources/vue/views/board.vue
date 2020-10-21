@@ -23,23 +23,19 @@
       piece: function (piece) {
         if (piece.color === 'WHITE') {
           switch (piece.name.toLowerCase()) {
-            case 'pawn':
-              return '♙';
-            case 'rook':
-              return '♖';
-            case 'queen':
-              return '♕';
-            case 'knight':
-              return '♘';
-            case 'bishop':
-              return '♗';
-            case 'king':
-              return '♔';
-            default:
-              return `${piece.color[0]}${piece.name}`;
+            // @formatter:off
+            case 'pawn': return '♙';
+            case 'rook': return '♖';
+            case 'queen': return '♕';
+            case 'knight': return '♘';
+            case 'bishop': return '♗';
+            case 'king': return '♔';
+            default: return `${piece.color[0]}${piece.name}`;
+            // @formatter:on
           }
         } else if (piece.color === 'BLACK') {
           switch (piece.name.toLowerCase()) {
+            // @formatter:off
             case 'pawn': return '♟';
             case 'rook': return '♜';
             case 'queen': return '♛';
@@ -47,6 +43,7 @@
             case 'bishop': return '♝';
             case 'king': return '♚';
             default: return `${piece.color[0]}${piece.name}`;
+            // @formatter:on
           }
         }
       }
