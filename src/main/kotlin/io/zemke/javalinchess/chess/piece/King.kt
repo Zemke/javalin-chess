@@ -4,6 +4,10 @@ import io.zemke.javalinchess.chess.Board
 
 class King(color: Color, position: Position) : Piece("King", color, position) {
 
+    // todo for Pawns they can only capture diagonally,
+    //  therefore for King it is allowed to move into that straight position in front
+    //  of that opponent's Pawn as that capure move wouldn't be allowed and therefore
+    //  King wouldn't move into a capturing position
     override fun allowedNextPositions(board: Board): Set<Position> {
         return allowedNextPositionsWithoutAllowMoveIntoCheck(board)
                 .filter { !inCheck(Board(board).move(this, it)) }

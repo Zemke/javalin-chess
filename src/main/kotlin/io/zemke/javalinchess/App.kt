@@ -26,6 +26,9 @@ class JavalinChess {
     private lateinit var pieceController: PieceController
 
     fun run() {
+        // todo validate that when in check, the next turn has to move out of check
+        //  as no other turn is permitted
+
         val app = Javalin.create { config ->
             config.enableWebjars()
             config.addStaticFiles("/public")
