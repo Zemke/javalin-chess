@@ -134,8 +134,15 @@
   }
 
   .piece button[disabled] {
-    color: inherit;
     cursor: inherit;
+  }
+
+  .piece button.white[disabled] {
+    color: white
+  }
+
+  .piece button.black[disabled] {
+    color: black;
   }
 
   .piece.selected {
