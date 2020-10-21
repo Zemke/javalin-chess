@@ -36,14 +36,16 @@ class TurnControllerTest {
         board.uuidWhite = authUuid
         val piece = board.getPieceAt(Position(0, 6)) ?: throw RuntimeException()
         every { memcached.retrieve<Board>(board.id) } returns board
+        val target = Position(0, 4)
+        val newBoard = Board(true).move(piece, target)
+        every { memcached.store(board.id, newBoard) } returns true
         every { anyConstructed<DelegationContext>().header("auth") } returns authUuid
         every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
-        val target = Position(0, 4)
         every { anyConstructed<DelegationContext>().body() } returns JavalinJson.toJson(TurnDto(piece.id, target))
         val boardSlot = slot<Board>()
         every { anyConstructed<DelegationContext>().json(capture(boardSlot)) } returns ctx
         turnController.create(ctx)
-        assertThat(boardSlot.captured).isEqualTo(Board(true).move(piece, target))
+        assertThat(boardSlot.captured).isEqualTo(newBoard)
         assertThat(boardSlot.captured.nextTurn).isEqualTo(Color.BLACK)
         verify { ctx.status(201) }
     }
