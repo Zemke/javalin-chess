@@ -10,7 +10,7 @@ import io.mockk.mockkConstructor
 import io.mockk.verify
 import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.chess.Board
-import io.zemke.javalinchess.chess.piece.Position
+import io.zemke.javalinchess.chess.piece.*
 import io.zemke.javalinchess.complex.Memcached
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,5 +36,24 @@ class PieceControllerTest {
         pieceController.allowedNextPositions(ctx)
         verify { ctx.status(200) }
         verify { ctx.json(piece.allowedNextPositions(board)) }
+    }
+
+    @Test
+    fun `allowedNextPositions when in check`() {
+        val ctx = mockk<Context>(relaxed = true)
+        mockkConstructor(DelegationContext::class)
+        val board = Board(false)
+        val knight = Knight(Color.WHITE, Position(0, 1))
+        board.putPieces(
+                knight,
+                King(Color.WHITE, Position(3, 3)),
+                Queen(Color.BLACK, Position(3, 2)),
+                King(Color.BLACK, Position(0, 0)))
+        every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns knight.id
+        every { memcached.retrieve<Board>(board.id) } returns board
+        pieceController.allowedNextPositions(ctx)
+        verify { ctx.status(200) }
+        verify { ctx.json(emptySet<Position>()) }
     }
 }
