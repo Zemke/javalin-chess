@@ -7,6 +7,7 @@
         <div v-for="(piece, fileIdx) in rank" class="piece"
              v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx), selected: selected.id != null && selected.id === piece?.id}">
           <button v-if="piece != null" v-bind:disabled="piece.color !== board.nextTurn && !isAllowedNextPosition(fileIdx, rankIdx)"
+                  v-bind:class="piece.color.toLowerCase()"
                   v-on:click="isAllowedNextPosition(fileIdx, rankIdx) ? move(fileIdx, rankIdx) : select(piece)">
             {{piece | piece}}
           </button>
@@ -29,31 +30,14 @@
     template: "#board",
     filters: {
       piece: function (piece) {
-        if (piece.color === 'WHITE') {
-          switch (piece.name.toLowerCase()) {
-            // @formatter:off
-            case 'pawn': return '♙';
-            case 'rook': return '♖';
-            case 'queen': return '♕';
-            case 'knight': return '♘';
-            case 'bishop': return '♗';
-            case 'king': return '♔';
-            default: return `${piece.color[0]}${piece.name}`;
-            // @formatter:on
-          }
-        } else if (piece.color === 'BLACK') {
-          switch (piece.name.toLowerCase()) {
-            // @formatter:off
-            case 'pawn': return '♟';
-            case 'rook': return '♜';
-            case 'queen': return '♛';
-            case 'knight': return '♞';
-            case 'bishop': return '♝';
-            case 'king': return '♚';
-            default: return `${piece.color[0]}${piece.name}`;
-            // @formatter:on
-          }
-        }
+        return ({
+          'pawn': '♟',
+          'rook': '♜',
+          'queen': '♛',
+          'knight': '♞',
+          'bishop': '♝',
+          'king': '♚',
+        })[piece.name.toLowerCase()] || piece.name
       }
     },
     data: () => ({
@@ -132,12 +116,21 @@
 
   .piece button {
     border: none;
-    padding: 0;
+    padding: 0 .5rem;
     margin: 0;
     background: transparent;
-    font-size: 2.5rem;
-    text-shadow: 0 0 5px #fff;
+    font-size: 3rem;
     cursor: pointer;
+  }
+
+  .piece button.white {
+    color: white;
+    text-shadow: 0 0 5px #000;
+  }
+
+  .piece button.black {
+    color: black;
+    text-shadow: 0 0 5px #fff;
   }
 
   .piece button[disabled] {
