@@ -47,9 +47,21 @@
       selected: {},
     }),
     created() {
-      fetch("api/board", {method: 'POST'})
-        .then(res => res.json())
-        .then(res => this.board = res);
+      const searchParams = new URLSearchParams(location.search);
+      console.log()
+      if (searchParams.get('board') != null) {
+        fetch(`api/board/${searchParams.get('board')}`)
+          .then(res => res.json())
+          .then(res => this.board = res);
+      } else {
+        fetch("api/board", {method: 'POST'})
+          .then(res => res.json())
+          .then(res => {
+            searchParams.set('board', res.id);
+            history.replaceState(null, '', '?' + searchParams.toString());
+            this.board = res;
+          });
+      }
     },
     methods: {
       select(piece) {

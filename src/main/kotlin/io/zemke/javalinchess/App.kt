@@ -35,6 +35,7 @@ class JavalinChess {
             path("api") {
                 get("/") { ctx -> ctx.result("Hello World") }
                 path("board") {
+                    get("", boardController::get)
                     post(boardController::create)
                     path(":key") {
                         get(boardController::get)
