@@ -6,7 +6,9 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
-        val ownPieces = board.ownPieces(this.color).map { it.position }
+        val ownPieces = board.ownPieces(this.color)
+                .mapNotNull { board.findPieceById(it.id) }
+                .map { it.position }
         return setOf(
                 Position(current.file + 1, current.rank),
                 Position(current.file - 1, current.rank),
