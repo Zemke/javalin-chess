@@ -31,7 +31,7 @@ class PieceControllerTest {
         val board = Board(true)
         val piece = board.getPieceAt(Position(0, 6))!!
         every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
-        every { anyConstructed<DelegationContext>().pathParam("pieceId") } returns piece.id
+        every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns piece.id
         every { memcached.retrieve<Board>(board.id) } returns board
         pieceController.allowedNextPositions(ctx)
         verify { ctx.status(200) }
