@@ -39,7 +39,7 @@ class PieceControllerTest {
     }
 
     @Test
-    fun `allowedNextPositions when in check`() {
+    fun `allowedNextPositions when in check move wouldn't escape check`() {
         val ctx = mockk<Context>(relaxed = true)
         mockkConstructor(DelegationContext::class)
         val board = Board(false)
@@ -55,5 +55,24 @@ class PieceControllerTest {
         pieceController.allowedNextPositions(ctx)
         verify { ctx.status(200) }
         verify { ctx.json(emptySet<Position>()) }
+    }
+
+    @Test
+    fun `allowedNextPositions when in check and move captures attacking opponent piece`() {
+        val ctx = mockk<Context>(relaxed = true)
+        mockkConstructor(DelegationContext::class)
+        val board = Board(false)
+        val pawn = Pawn(Color.WHITE, Position(7, 5))
+        board.putPieces(
+                pawn,
+                King(Color.WHITE, Position(5, 5)),
+                Pawn(Color.BLACK, Position(6, 4)),
+                King(Color.BLACK, Position(0, 0)))
+        every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns pawn.id
+        every { memcached.retrieve<Board>(board.id) } returns board
+        pieceController.allowedNextPositions(ctx)
+        verify { ctx.status(200) }
+        verify { ctx.json(setOf(Position(6, 4))) }
     }
 }
