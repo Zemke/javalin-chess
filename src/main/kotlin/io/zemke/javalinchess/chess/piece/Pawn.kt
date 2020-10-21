@@ -8,6 +8,10 @@ import kotlin.math.abs
 class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
+        return allowedNextPositions(board, false)
+    }
+
+    fun allowedNextPositions(board: Board, excludeNonCapturing: Boolean): Set<Position> {
         val current = board.findPositionOfPiece(this)
         val fn = if (color == BLACK) Int::inc else Int::dec
         val allowedNextPositions =
@@ -18,7 +22,8 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
                 } else {
                     mutableSetOf(Position(current.file, fn(current.rank)))
                 }
-        var checkPosition = Position.ifValid(current.file + 1, fn(current.rank))
+        var checkPosition: Position?
+        checkPosition = Position.ifValid(current.file + 1, fn(current.rank))
         if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
             allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
         }
@@ -26,13 +31,15 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
             allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
-        checkPosition = Position.ifValid(current.file + 1, current.rank)
-        if (checkPosition != null && board.isPassible(checkPosition)) {
-            allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
-        }
-        checkPosition = Position.ifValid(current.file - 1, current.rank)
-        if (checkPosition != null && board.isPassible(checkPosition)) {
-            allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
+        if (!excludeNonCapturing) {
+            checkPosition = Position.ifValid(current.file + 1, current.rank)
+            if (checkPosition != null && board.isPassible(checkPosition)) {
+                allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
+            }
+            checkPosition = Position.ifValid(current.file - 1, current.rank)
+            if (checkPosition != null && board.isPassible(checkPosition)) {
+                allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
+            }
         }
         return allowedNextPositions
     }
