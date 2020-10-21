@@ -11,17 +11,22 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         return allowedNextPositions(board, false)
     }
 
-    fun allowedNextPositions(board: Board, excludeNonCapturing: Boolean): Set<Position> {
+    fun allowedNextPositions(board: Board, onlyCapturing: Boolean): Set<Position> {
         val current = board.findPositionOfPiece(this)
         val fn = if (color == BLACK) Int::inc else Int::dec
-        val allowedNextPositions =
+        val allowedNextPositions = mutableSetOf<Position>()
+        if (!onlyCapturing) {
+            var position = Position.ifValid(current.file, fn(current.rank))
+            if (position != null && board.getPieceAt(position) == null) {
+                allowedNextPositions.add(position)
                 if (longLeapAllowed(board)) {
-                    mutableSetOf(
-                            Position(current.file, fn(current.rank)),
-                            Position(current.file, fn(fn(current.rank))))
-                } else {
-                    mutableSetOf(Position(current.file, fn(current.rank)))
+                    position = Position.ifValid(current.file, fn(fn(current.rank)))
+                    if (position != null && board.getPieceAt(position) == null) {
+                        allowedNextPositions.add(position)
+                    }
                 }
+            }
+        }
         var checkPosition: Position?
         checkPosition = Position.ifValid(current.file + 1, fn(current.rank))
         if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
@@ -31,15 +36,13 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         if (checkPosition != null && board.getPieceAt(checkPosition)?.color == color.other()) {
             allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
-        if (!excludeNonCapturing) {
-            checkPosition = Position.ifValid(current.file + 1, current.rank)
-            if (checkPosition != null && board.isPassible(checkPosition)) {
-                allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
-            }
-            checkPosition = Position.ifValid(current.file - 1, current.rank)
-            if (checkPosition != null && board.isPassible(checkPosition)) {
-                allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
-            }
+        checkPosition = Position.ifValid(current.file + 1, current.rank)
+        if (checkPosition != null && board.isPassible(checkPosition)) {
+            allowedNextPositions.add(Position(current.file + 1, fn(current.rank)))
+        }
+        checkPosition = Position.ifValid(current.file - 1, current.rank)
+        if (checkPosition != null && board.isPassible(checkPosition)) {
+            allowedNextPositions.add(Position(current.file - 1, fn(current.rank)))
         }
         return allowedNextPositions
     }
@@ -66,3 +69,4 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
                 || (color == WHITE && current.rank == 6))
     }
 }
+

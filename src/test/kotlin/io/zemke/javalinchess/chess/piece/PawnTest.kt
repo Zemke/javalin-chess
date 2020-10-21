@@ -76,4 +76,14 @@ class PawnTest {
         board.putPiece(pawn)
         assertThat(pawn.promotable(board)).isFalse()
     }
+
+    @Test
+    fun `cannot jump over opponent`() {
+        val pawn = Pawn(Color.BLACK, Position(3, 1))
+        val board = Board(false)
+        board.putPieces(pawn, Pawn(Color.WHITE, Position(3, 2)))
+        println(board)
+        val actual = pawn.allowedNextPositions(board)
+        assertThat(actual).isEmpty()
+    }
 }
