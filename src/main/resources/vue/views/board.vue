@@ -6,7 +6,7 @@
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
              v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx), selected: selected.id != null && selected.id === piece?.id}">
-          <button v-if="piece != null"
+          <button v-if="piece != null" v-bind:disabled="piece.color !== board.nextTurn"
                   v-on:click="isAllowedNextPosition(fileIdx, rankIdx) ? move(fileIdx, rankIdx) : select(piece)">
             {{piece | piece}}
           </button>
@@ -138,6 +138,11 @@
     font-size: 2.5rem;
     text-shadow: 0 0 5px #fff;
     cursor: pointer;
+  }
+
+  .piece button[disabled] {
+    color: inherit;
+    cursor: inherit;
   }
 
   .piece.selected {
