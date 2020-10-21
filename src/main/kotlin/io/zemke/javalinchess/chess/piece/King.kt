@@ -5,6 +5,15 @@ import io.zemke.javalinchess.chess.Board
 class King(color: Color, position: Position) : Piece("King", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
+        return allowedNextPositionsWithoutAllowMoveIntoCheck(board)
+                .filter { !inCheck(Board(board).move(this, it)) }
+                .toSet()
+    }
+
+    /**
+     * Like [allowedNextPositions] but without filtering positions which are in check.
+     */
+    fun allowedNextPositionsWithoutAllowMoveIntoCheck(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)
         val ownPieces = board.ownPieces(this.color)
                 .mapNotNull { board.findPieceById(it.id) }
@@ -21,7 +30,6 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
         )
                 .filterNotNull()
                 .filter { !ownPieces.contains(it) }
-                .filter { !inCheck(Board(board).move(this, it)) }
                 .toSet()
     }
 
@@ -63,7 +71,10 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
 
     fun inCheck(board: Board): Boolean {
         return board.opponentPieces(color)
-                .map { it.allowedNextPositions(board) }
+                .map {
+                    if (it is King) it.allowedNextPositionsWithoutAllowMoveIntoCheck(board)
+                    else it.allowedNextPositions(board)
+                }
                 .flatten()
                 .contains(board.findPositionOfPiece(this))
     }
