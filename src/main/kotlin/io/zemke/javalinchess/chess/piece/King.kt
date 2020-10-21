@@ -10,15 +10,16 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
                 .mapNotNull { board.findPieceById(it.id) }
                 .map { it.position }
         return setOf(
-                Position(current.file + 1, current.rank),
-                Position(current.file - 1, current.rank),
-                Position(current.file, current.rank + 1),
-                Position(current.file, current.rank - 1),
-                Position(current.file - 1, current.rank - 1),
-                Position(current.file - 1, current.rank + 1),
-                Position(current.file + 1, current.rank - 1),
-                Position(current.file + 1, current.rank + 1),
+                Position.ifValid(current.file + 1, current.rank),
+                Position.ifValid(current.file - 1, current.rank),
+                Position.ifValid(current.file, current.rank + 1),
+                Position.ifValid(current.file, current.rank - 1),
+                Position.ifValid(current.file - 1, current.rank - 1),
+                Position.ifValid(current.file - 1, current.rank + 1),
+                Position.ifValid(current.file + 1, current.rank - 1),
+                Position.ifValid(current.file + 1, current.rank + 1),
         )
+                .filterNotNull()
                 .filter { !ownPieces.contains(it) }
                 .filter { !inCheck(Board(board).move(this, it)) }
                 .toSet()
