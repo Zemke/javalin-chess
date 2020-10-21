@@ -1,10 +1,13 @@
 <template id="board">
   <div>
+    <pre>{{allowedNextPositions}}</pre>
     <div class="board" v-if="board != null">
-      <div v-for="rank in board.grid" class="rank">
-        <div v-for="piece in rank" class="piece">
-          <div v-if="piece != null">{{piece | piece}}</div>
-          <div v-if="piece == null">&nbsp;</div>
+      <div v-for="(rank, rankIdx) in board.grid" class="rank">
+        <div v-for="(piece, fileIdx) in rank" class="piece"
+             v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx) }">
+          <button v-if="piece != null" v-on:click="select(piece)">
+            {{piece | piece}}
+          </button>
         </div>
       </div>
     </div>
@@ -17,13 +20,20 @@
       piece: function (piece) {
         if (piece.color === 'WHITE') {
           switch (piece.name.toLowerCase()) {
-            case 'pawn': return '♙';
-            case 'rook': return '♖';
-            case 'queen': return '♕';
-            case 'knight': return '♘';
-            case 'bishop': return '♗';
-            case 'king': return '♔';
-            default: return `${piece.color[0]}${piece.name}`;
+            case 'pawn':
+              return '♙';
+            case 'rook':
+              return '♖';
+            case 'queen':
+              return '♕';
+            case 'knight':
+              return '♘';
+            case 'bishop':
+              return '♗';
+            case 'king':
+              return '♔';
+            default:
+              return `${piece.color[0]}${piece.name}`;
           }
         } else if (piece.color === 'BLACK') {
           switch (piece.name.toLowerCase()) {
@@ -40,12 +50,24 @@
     },
     data: () => ({
       board: null,
+      allowedNextPositions: []
     }),
     created() {
       fetch("api/board", {method: 'POST'})
         .then(res => res.json())
         .then(res => this.board = res);
-    }
+    },
+    methods: {
+      select(piece) {
+        fetch(`api/board/${this.board.id}/piece/${piece.id}/allowed-next-positions`)
+          .then(res => res.json())
+          .then(res => this.allowedNextPositions = res)
+      },
+      isAllowedNextPosition(file, rank) {
+        return !!this.allowedNextPositions
+          .find(pos => pos.file === file && pos.rank === rank)
+      }
+    },
   });
 </script>
 <style>
@@ -75,7 +97,20 @@
     justify-content: center;
     align-items: center;
     align-content: center;
+  }
+
+  .piece button {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
     font-size: 2.5rem;
+    cursor: pointer;
+  }
+
+  .piece.allowedNextPosition {
+    box-shadow: 5px 5px 10px black;
+    z-index: 1;
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
