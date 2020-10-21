@@ -4,7 +4,7 @@
     <div class="board" v-if="board != null">
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
-             v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx) }">
+             v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx), selected: selected.id != null && selected.id === piece?.id}">
           <button v-if="piece != null"
                   v-on:click="isAllowedNextPosition(fileIdx, rankIdx) ? move(fileIdx, rankIdx) : select(piece)">
             {{piece | piece}}
@@ -114,7 +114,6 @@
   .piece {
     width: 4.5rem;
     height: 4.5rem;
-    text-shadow: 0 0 5px #fff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,13 +126,18 @@
     margin: 0;
     background: transparent;
     font-size: 2.5rem;
+    text-shadow: 0 0 5px #fff;
     cursor: pointer;
   }
 
+  .piece.selected {
+    box-shadow: inset 0 0 10px black;
+  }
+
   .piece.allowedNextPosition {
-    box-shadow: 5px 5px 10px black;
     z-index: 1;
     transition: transform .5s ease-out;
+    box-shadow: 0 0 5px black;
   }
 
   .piece.allowedNextPosition button {
@@ -142,6 +146,7 @@
 
   .piece.allowedNextPosition:hover {
     transform: scale(1.2);
+    box-shadow: 0 0 5px black;
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
