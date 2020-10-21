@@ -8,7 +8,7 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
         val current = board.findPositionOfPiece(this)
         val ownPieces = board.ownPieces(this.color)
                 .mapNotNull { board.findPieceById(it.id) }
-                .map { it.position }
+                .map { board.findPositionOfPiece(it) }
         return setOf(
                 Position.ifValid(current.file + 1, current.rank),
                 Position.ifValid(current.file - 1, current.rank),
