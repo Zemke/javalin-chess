@@ -15,7 +15,7 @@ class PieceController {
 
     fun allowedNextPositions(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
-        val pieceId = ctx.pathParam("pieceId")
+        val pieceId = ctx.pathParam("pieceKey")
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
         val piece = board.findPieceById(pieceId) ?: throw RuntimeException()
         ctx.status(200)
