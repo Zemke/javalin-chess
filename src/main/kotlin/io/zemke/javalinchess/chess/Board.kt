@@ -70,6 +70,9 @@ class Board : Entity {
 
     fun move(piece: Piece, target: Position): Board {
         val current = findPositionOfPiece(piece)
+        if (piece is Pawn && getPieceAt(target) == null && isPassible(Position(target.file, current.rank))) {
+            grid[current.rank][target.file] = null
+        }
         grid[target.rank][target.file] = piece
         grid[current.rank][current.file] = null
         movements.add(piece to target)

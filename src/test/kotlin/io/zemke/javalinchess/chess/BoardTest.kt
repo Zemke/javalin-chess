@@ -1,6 +1,7 @@
 package io.zemke.javalinchess.chess
 
 import io.zemke.javalinchess.chess.piece.Color
+import io.zemke.javalinchess.chess.piece.Pawn
 import io.zemke.javalinchess.chess.piece.Position
 import io.zemke.javalinchess.chess.piece.Rook
 import org.assertj.core.api.Assertions
@@ -62,5 +63,20 @@ class BoardTest {
         val actual = board.move(piece!!, target)
         Assertions.assertThat(actual.getPieceAt(target)).isEqualTo(piece)
         Assertions.assertThat(actual.getPieceAt(source)).isNull()
+    }
+
+    @Test
+    fun `en passant`() {
+        val passer = Pawn(Color.WHITE, Position(1, 3))
+        val board = Board(false)
+        val passible = Pawn(Color.BLACK, Position(0, 1))
+        board.putPieces(passer, passible)
+        board.move(passible, Position(0, 3))
+        println(board)
+        board.move(passer, Position(0, 2))
+        println(board)
+        Assertions.assertThat(board.getPieceAt(Position(0, 3))).isNull()
+        Assertions.assertThat(board.findPieceById(passible.id)).isNull()
+        Assertions.assertThat(board.getPieceAt(Position(0, 2))).isEqualTo(passer)
     }
 }
