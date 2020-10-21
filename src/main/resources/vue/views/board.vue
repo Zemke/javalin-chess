@@ -1,6 +1,7 @@
 <template id="board">
   <div>
     <pre v-if="debug">{{allowedNextPositions}}</pre>
+    <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
     <div class="board" v-if="board != null">
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
@@ -156,6 +157,24 @@
   .piece.allowedNextPosition:hover {
     transform: scale(1.2);
     box-shadow: 0 0 5px black;
+  }
+
+  .nextTurn {
+    position: absolute;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    box-shadow: 0 0 1rem black;
+    top: 1.5rem;
+    right: 3rem;
+  }
+
+  .nextTurn.white {
+    background-color: white;
+  }
+
+  .nextTurn.black {
+    background-color: black;
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
