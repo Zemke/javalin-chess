@@ -11,7 +11,7 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         val current = board.findPositionOfPiece(this)
         val fn = if (color == BLACK) Int::inc else Int::dec
         val allowedNextPositions =
-                if (longLeapAllowed()) {
+                if (longLeapAllowed(board)) {
                     mutableSetOf(
                             Position(current.file, fn(current.rank)),
                             Position(current.file, fn(fn(current.rank))))
@@ -53,7 +53,9 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
                 || (color == WHITE && rank == 0))
     }
 
-    private fun longLeapAllowed(): Boolean =
-            (color == BLACK && position.rank == 1)
-                    || (color == WHITE && position.rank == 6)
+    private fun longLeapAllowed(board: Board): Boolean {
+        val current = board.findPositionOfPiece(this)
+        return ((color == BLACK && current.rank == 1)
+                || (color == WHITE && current.rank == 6))
+    }
 }
