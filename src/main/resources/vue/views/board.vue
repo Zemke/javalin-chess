@@ -68,6 +68,11 @@
     },
     methods: {
       select(piece) {
+        if (piece.id === this.selected?.id) {
+          this.selected = {};
+          this.allowedNextPositions = [];
+          return;
+        }
         this.selected = piece;
         fetch(`api/board/${this.board.id}/piece/${piece.id}/allowed-next-positions`)
           .then(res => res.json())
@@ -83,7 +88,11 @@
             headers: {'Content-Type': 'application/json'}
           })
           .then(res => res.json())
-          .then(res => this.board = res);
+          .then(res => {
+            this.board = res;
+            this.selected = {};
+            this.allowedNextPositions = [];
+          });
       },
       isAllowedNextPosition(file, rank) {
         return !!this.allowedNextPositions
