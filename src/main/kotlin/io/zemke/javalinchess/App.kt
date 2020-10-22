@@ -6,6 +6,7 @@ import io.javalin.plugin.rendering.vue.VueComponent
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.view.controller.BoardController
+import io.zemke.javalinchess.view.controller.CastleController
 import io.zemke.javalinchess.view.controller.PieceController
 import io.zemke.javalinchess.view.controller.TurnController
 
@@ -25,6 +26,9 @@ class JavalinChess {
     @Inject
     private lateinit var pieceController: PieceController
 
+    @Inject
+    private lateinit var castleController: CastleController
+
     fun run() {
         val app = Javalin.create { config ->
             config.enableWebjars()
@@ -43,6 +47,7 @@ class JavalinChess {
                         path("turn") {
                             post(turnController::create)
                         }
+                        post("castle/:side", castleController::castle)
                     }
                 }
             }
