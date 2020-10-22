@@ -7,6 +7,9 @@ import io.zemke.javalinchess.complex.Entity
 
 class Board : Entity {
 
+    /** [nextTurn] allowed to perform castling */
+    var castlingAllowed: Boolean
+        private set
     val grid: List<MutableList<Piece?>>
     val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
     var nextTurn: Color = WHITE
@@ -16,6 +19,7 @@ class Board : Entity {
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
+        castlingAllowed = castlingAllowed()
     }
 
     constructor(init: Boolean) {
@@ -43,10 +47,12 @@ class Board : Entity {
                     mutableListOf(null, null, null, null, null, null, null, null)
             )
         }
+        castlingAllowed = castlingAllowed()
     }
 
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
+        castlingAllowed = board.castlingAllowed
     }
 
     fun findPieceById(pieceId: String): Piece? =
@@ -81,6 +87,7 @@ class Board : Entity {
 
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
+        this.castlingAllowed = castlingAllowed()
     }
 
     fun getPieceAt(position: Position): Piece? {
@@ -135,6 +142,17 @@ class Board : Entity {
         }
         return movements.zipWithNext()
     }
+
+    private fun castlingAllowed(): Boolean {
+        return getPiece<Rook>(nextTurn)?.let { rook ->
+            getPiece<King>(nextTurn)?.castlingAllowed(this, rook) ?: false
+        } ?: false
+    }
+
+    private inline fun <reified T : Piece> getPiece(color: Color): T? =
+            grid.flatten()
+                    .filterNotNull()
+                    .find { it is T && it.color == color } as T
 
     override fun toString(): String {
         val nameOnBoard: (Piece?) -> String = {
