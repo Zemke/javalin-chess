@@ -27,8 +27,8 @@ class Board : Entity {
 
     constructor(init: Boolean) {
         if (init) {
-            grid = listOf<MutableList<Piece?>>(
-                    mutableListOf(Rook(BLACK, Position(0, 0)), Knight(BLACK, Position(1, 0)), Bishop(BLACK, Position(2, 0)), Queen(BLACK, Position(3, 0)), King(BLACK, Position(4, 0)), Bishop(BLACK, Position(5, 0)), Knight(BLACK, Position(6, 0)), Rook(BLACK, Position (7, 0))),
+            grid = listOf(
+                    mutableListOf(Rook(BLACK, Position(0, 0)), Knight(BLACK, Position(1, 0)), Bishop(BLACK, Position(2, 0)), Queen(BLACK, Position(3, 0)), King(BLACK, Position(4, 0)), Bishop(BLACK, Position(5, 0)), Knight(BLACK, Position(6, 0)), Rook(BLACK, Position(7, 0))),
                     mutableListOf(Pawn(BLACK, Position(0, 1)), Pawn(BLACK, Position(1, 1)), Pawn(BLACK, Position(2, 1)), Pawn(BLACK, Position(3, 1)), Pawn(BLACK, Position(4, 1)), Pawn(BLACK, Position(5, 1)), Pawn(BLACK, Position(6, 1)), Pawn(BLACK, Position(7, 1))),
                     mutableListOf(null, null, null, null, null, null, null, null),
                     mutableListOf(null, null, null, null, null, null, null, null),
@@ -39,7 +39,7 @@ class Board : Entity {
             )
             this.castlingAllowed = mutableSetOf()
         } else {
-            grid = listOf<MutableList<Piece?>>(
+            grid = listOf(
                     mutableListOf(null, null, null, null, null, null, null, null),
                     mutableListOf(null, null, null, null, null, null, null, null),
                     mutableListOf(null, null, null, null, null, null, null, null),
