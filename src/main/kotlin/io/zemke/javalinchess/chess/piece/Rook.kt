@@ -1,8 +1,28 @@
 package io.zemke.javalinchess.chess.piece
 
 import io.zemke.javalinchess.chess.Board
+import io.zemke.javalinchess.chess.piece.Color.BLACK
+import io.zemke.javalinchess.chess.piece.Color.WHITE
 
 class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
+
+    enum class Side { QUEENSIDE, KINGSIDE }
+
+    val side: Side?
+
+    init {
+        val queensidePosition = when (color) {
+            WHITE -> Position(0, 7); BLACK -> Position(0, 0)
+        }
+        val kingsidePosition = when (color) {
+            WHITE -> Position(7, 7); BLACK -> Position(7, 0)
+        }
+        side = when (position) {
+            queensidePosition -> Side.QUEENSIDE
+            kingsidePosition -> Side.KINGSIDE
+            else -> null
+        }
+    }
 
     override fun allowedNextPositions(board: Board): Set<Position> {
         val current = board.findPositionOfPiece(this)

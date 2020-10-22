@@ -7,9 +7,8 @@ import io.zemke.javalinchess.complex.Entity
 
 class Board : Entity {
 
-    /** [nextTurn] allowed to perform castling */
-    var castlingAllowed: Boolean
-        private set
+    /** [Rook.Side]s of rooks that can castle for color in [nextTurn]. */
+    val castlingAllowed: MutableSet<Rook.Side>
     val grid: List<MutableList<Piece?>>
     val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
     var nextTurn: Color = WHITE
@@ -19,7 +18,11 @@ class Board : Entity {
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
-        castlingAllowed = castlingAllowed()
+        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
+            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
+            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
+            this
+        }
     }
 
     constructor(init: Boolean) {
@@ -47,12 +50,20 @@ class Board : Entity {
                     mutableListOf(null, null, null, null, null, null, null, null)
             )
         }
-        castlingAllowed = castlingAllowed()
+        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
+            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
+            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
+            this
+        }
     }
 
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
-        castlingAllowed = board.castlingAllowed
+        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
+            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
+            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
+            this
+        }
     }
 
     fun findPieceById(pieceId: String): Piece? =
@@ -87,7 +98,12 @@ class Board : Entity {
 
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
-        this.castlingAllowed = castlingAllowed()
+        with(this.castlingAllowed) {
+            clear()
+            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
+            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
+            this
+        }
     }
 
     fun getPieceAt(position: Position): Piece? {
@@ -143,16 +159,25 @@ class Board : Entity {
         return movements.zipWithNext()
     }
 
-    private fun castlingAllowed(): Boolean {
-        return getPiece<Rook>(nextTurn)?.let { rook ->
-            getPiece<King>(nextTurn)?.castlingAllowed(this, rook) ?: false
-        } ?: false
-    }
+    fun getRook(side: Rook.Side) =
+            getPieces<Rook>(nextTurn).find { it.side == side }
+
+    private fun castlingAllowed(side: Rook.Side) =
+            getRook(side)
+                    ?.let { getPiece<King>(nextTurn)?.castlingAllowed(this, it) ?: false }
+                    ?: false
 
     private inline fun <reified T : Piece> getPiece(color: Color): T? =
             grid.flatten()
                     .filterNotNull()
                     .find { it is T && it.color == color } as T
+
+    private inline fun <reified T : Piece> getPieces(color: Color): Set<T> =
+            grid.asSequence().flatten()
+                    .filterNotNull()
+                    .filter { it is T && it.color == color }
+                    .map { it as T }
+                    .toSet()
 
     override fun toString(): String {
         val nameOnBoard: (Piece?) -> String = {
