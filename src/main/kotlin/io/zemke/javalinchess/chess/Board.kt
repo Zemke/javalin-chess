@@ -56,6 +56,9 @@ class Board : Entity {
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
         this.castlingAllowed = board.castlingAllowed
+        this.nextTurn = board.nextTurn
+        this.uuidBlack = board.uuidBlack
+        this.uuidWhite = board.uuidWhite
     }
 
     fun findPieceById(pieceId: String): Piece? =
