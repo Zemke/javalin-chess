@@ -84,4 +84,22 @@ class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
         return setOf(*allowedOnSameRank.toTypedArray(), *allowedOnSameFile.toTypedArray())
                 .filter { it != current }.toSet()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as Rook
+
+        if (side != other.side) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + (side?.hashCode() ?: 0)
+        return result
+    }
 }

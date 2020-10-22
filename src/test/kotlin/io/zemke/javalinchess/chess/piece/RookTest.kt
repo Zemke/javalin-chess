@@ -104,4 +104,13 @@ class RookTest {
                 Position(5, 3), Position(6, 3), Position(7, 3), Position(3, 4),
                 Position(3, 5), Position(3, 6), Position(3, 7), Position(2, 3))
     }
+
+
+    @Test
+    fun `test Rook creation queenside or kingside`() {
+        assertThat(Rook(Color.WHITE, Position(0, 7)).side).isEqualTo(Rook.Side.QUEENSIDE)
+        assertThat(Rook(Color.WHITE, Position(7, 7)).side).isEqualTo(Rook.Side.KINGSIDE)
+        assertThat(Rook(Color.BLACK, Position(0, 0)).side).isEqualTo(Rook.Side.QUEENSIDE)
+        assertThat(Rook(Color.BLACK, Position(7, 0)).side).isEqualTo(Rook.Side.KINGSIDE)
+    }
 }
