@@ -37,7 +37,7 @@ class Board : Entity {
                     mutableListOf(Pawn(WHITE, Position(0, 6)), Pawn(WHITE, Position(1, 6)), Pawn(WHITE, Position(2, 6)), Pawn(WHITE, Position(3, 6)), Pawn(WHITE, Position(4, 6)), Pawn(WHITE, Position(5, 6)), Pawn(WHITE, Position(6, 6)), Pawn(WHITE, Position(7, 6))),
                     mutableListOf(Rook(WHITE, Position(0, 7)), Knight(WHITE, Position(1, 7)), Bishop(WHITE, Position(2, 7)), Queen(WHITE, Position(3, 7)), King(WHITE, Position(4, 7)), Bishop(WHITE, Position(5, 7)), Knight(WHITE, Position(6, 7)), Rook(WHITE, Position(7, 7)))
             )
-
+            this.castlingAllowed = mutableSetOf()
         } else {
             grid = listOf<MutableList<Piece?>>(
                     mutableListOf(null, null, null, null, null, null, null, null),
@@ -49,21 +49,13 @@ class Board : Entity {
                     mutableListOf(null, null, null, null, null, null, null, null),
                     mutableListOf(null, null, null, null, null, null, null, null)
             )
-        }
-        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
-            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
-            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
-            this
+            this.castlingAllowed = mutableSetOf()
         }
     }
 
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
-        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
-            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
-            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
-            this
-        }
+        this.castlingAllowed = board.castlingAllowed
     }
 
     fun findPieceById(pieceId: String): Piece? =

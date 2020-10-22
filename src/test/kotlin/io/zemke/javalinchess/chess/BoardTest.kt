@@ -1,9 +1,6 @@
 package io.zemke.javalinchess.chess
 
-import io.zemke.javalinchess.chess.piece.Color
-import io.zemke.javalinchess.chess.piece.Pawn
-import io.zemke.javalinchess.chess.piece.Position
-import io.zemke.javalinchess.chess.piece.Rook
+import io.zemke.javalinchess.chess.piece.*
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -78,5 +75,38 @@ class BoardTest {
         Assertions.assertThat(board.getPieceAt(Position(0, 3))).isNull()
         Assertions.assertThat(board.findPieceById(passible.id)).isNull()
         Assertions.assertThat(board.getPieceAt(Position(0, 2))).isEqualTo(passer)
+    }
+
+    @Test
+    fun `nextTurn white`() {
+        val board = Board(false)
+        val king = King(Color.WHITE, Position(4, 7))
+        val rookQueenside = Rook(Color.WHITE, Position(0, 7))
+        val rookKingside = Rook(Color.WHITE, Position(7, 7))
+        board.putPiece(king)
+        board.putPiece(rookQueenside)
+        board.putPiece(rookKingside)
+        board.nextTurn()
+        board.nextTurn()
+        println("$board")
+        Assertions.assertThat(king.castlingAllowed(board, rookKingside)).isTrue
+        Assertions.assertThat(board.castlingAllowed)
+                .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+    }
+
+    @Test
+    fun `nextTurn black`() {
+        val board = Board(false)
+        val king = King(Color.BLACK, Position(4, 0))
+        val rookQueenside = Rook(Color.BLACK, Position(0, 0))
+        val rookKingside = Rook(Color.BLACK, Position(7, 0))
+        board.putPiece(king)
+        board.putPiece(rookQueenside)
+        board.putPiece(rookKingside)
+        board.nextTurn()
+        println("$board")
+        Assertions.assertThat(king.castlingAllowed(board, rookKingside)).isTrue
+        Assertions.assertThat(board.castlingAllowed)
+                .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
     }
 }
