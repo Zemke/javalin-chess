@@ -115,6 +115,10 @@
           this.allowedNextPositions = [];
           return;
         }
+        if ((this.board.nextTurn === 'WHITE' && (this.board.uuidWhite !== uuid && this.board.uuidWhite != null))
+          || (this.board.nextTurn === 'BLACK' && (this.board.uuidBlack !== uuid && this.board.uuidBlack != null))) {
+          return;
+        }
         this.selected = piece;
         fetch(`api/board/${this.board.id}/piece/${piece.id}/allowed-next-positions`)
           .then(res => res.json())
@@ -234,6 +238,10 @@
     background: transparent;
     font-size: 3rem;
     cursor: pointer;
+  }
+
+  .piece button:focus {
+    outline: none;
   }
 
   .piece button.white {
