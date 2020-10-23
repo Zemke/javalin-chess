@@ -4,6 +4,7 @@ import io.zemke.javalinchess.chess.Board
 import io.zemke.javalinchess.chess.piece.Color.BLACK
 import io.zemke.javalinchess.chess.piece.Color.WHITE
 import io.zemke.javalinchess.complex.Entity
+import kotlin.contracts.contract
 
 abstract class Piece(val name: String, val color: Color, val position: Position) : Entity() {
 
@@ -16,6 +17,7 @@ abstract class Piece(val name: String, val color: Color, val position: Position)
     fun isOwn(color: Color): Boolean = color == this.color
 
     fun promotable(board: Board): Boolean {
+        contract { returns() implies (this@Piece is Pawn) }
         if (this !is Pawn) return false
         val (_, rank) = board.findPosition(this)
         return ((color == BLACK && rank == 7)

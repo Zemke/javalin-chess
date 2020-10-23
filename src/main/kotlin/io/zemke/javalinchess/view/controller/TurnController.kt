@@ -41,7 +41,7 @@ class TurnController {
             board.uuidBlack = auth
         }
         board.move(piece, turn.target)
-        if (piece.promotable(board) && piece is Pawn) { // the latter condition could be a contract
+        if (piece.promotable(board)) {
             piece.promote(board) { color, position ->
                 when (turn.promotion?.let { it.toLowerCase() }) {
                     "bishop" -> Bishop(color, position)
