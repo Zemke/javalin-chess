@@ -1,6 +1,14 @@
 <template id="board">
   <div>
     <pre v-if="debug">{{board.castlingAllowed}}</pre>
+    <div class="overlay" v-if="pendingPromotion != null">
+      <div class="promotion">
+        <button v-on:click="promote('rook')">♜</button>
+        <button v-on:click="promote('queen')">♛</button>
+        <button v-on:click="promote('knight')">♞</button>
+        <button v-on:click="promote('bishop')">♝</button>
+      </div>
+    </div>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
     <button class="castling kingside"
             v-if="board.castlingAllowed.includes('KINGSIDE')"
@@ -58,6 +66,7 @@
       allowedNextPositions: [],
       debug: new URLSearchParams(location.search).get('debug') != null,
       selected: {},
+      pendingPromotion: null,
     }),
     created() {
       const searchParams = new URLSearchParams(location.search);
@@ -87,7 +96,28 @@
           .then(res => res.json())
           .then(res => this.allowedNextPositions = res)
       },
+      promote(promotion) {
+        fetch(
+          `api/board/${this.board.id}/turn`,
+          {
+            method: 'POST',
+            body: JSON.stringify({piece: this.selected.id, target: this.pendingPromotion, promotion}),
+            headers: {'Content-Type': 'application/json'}
+          })
+          .then(res => res.json())
+          .then(res => {
+            this.board = res;
+            this.selected = {};
+            this.allowedNextPositions = [];
+            this.pendingPromotion = null;
+          });
+
+      },
       move(file, rank) {
+        if (this.selected.name.toLowerCase() === 'pawn' && (rank === 7 || rank === 0)) {
+          this.pendingPromotion = {file, rank};
+          return;
+        }
         const piece = this.selected;
         fetch(
           `api/board/${this.board.id}/turn`,
@@ -116,6 +146,36 @@
   });
 </script>
 <style>
+  .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: 0.8;
+    backdrop-filter: blur(20px);
+  }
+
+  .overlay .promotion button {
+    height: 8rem;
+    width: 8rem;
+    margin: 1rem;
+    font-size: 4rem;
+    cursor: pointer;
+    border-radius: .2rem;
+    transition: transform .1s;
+  }
+
+  .overlay .promotion button:hover {
+    transform: scale(1.2);
+    transition: transform .3s;
+  }
+
   h1 {
     text-align: center;
   }
