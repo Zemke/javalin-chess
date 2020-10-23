@@ -69,20 +69,36 @@
       pendingPromotion: null,
     }),
     created() {
+      let boardIdPromise;
       const searchParams = new URLSearchParams(location.search);
       if (searchParams.get('board') != null) {
-        fetch(`api/board/${searchParams.get('board')}`)
+        boardIdPromise = fetch(`api/board/${searchParams.get('board')}`)
           .then(res => res.json())
-          .then(res => this.board = res);
+          .then(res => {
+            this.board = res;
+            return res.id;
+          });
       } else {
-        fetch("api/board", {method: 'POST'})
+        boardIdPromise = fetch("api/board", {method: 'POST'})
           .then(res => res.json())
           .then(res => {
             searchParams.set('board', res.id);
             history.replaceState(null, '', '?' + searchParams.toString());
             this.board = res;
+            return res.id
           });
       }
+      boardIdPromise.then(boardId => {
+        const poll = () => {
+          setTimeout(() => {
+            fetch(`api/board/${boardId}`)
+              .then(res => res.json())
+              .then(res => this.board = res)
+              .then(poll);
+          }, 3000);
+        };
+        poll();
+      })
     },
     methods: {
       select(piece) {
