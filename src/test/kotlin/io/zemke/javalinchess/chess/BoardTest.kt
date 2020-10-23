@@ -11,13 +11,13 @@ class BoardTest {
         val board = Board(false)
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
-        val piece = board.getPieceAt(source)
+        val piece = board.findPiece(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(3, 5)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.getPieceAt(source)).isNull()
+        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
+        Assertions.assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -25,13 +25,13 @@ class BoardTest {
         val board = Board(false)
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
-        val piece = board.getPieceAt(source)
+        val piece = board.findPiece(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(3, 1)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.getPieceAt(source)).isNull()
+        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
+        Assertions.assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -39,13 +39,13 @@ class BoardTest {
         val board = Board(false)
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
-        val piece = board.getPieceAt(source)
+        val piece = board.findPiece(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(5, 3)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.getPieceAt(source)).isNull()
+        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
+        Assertions.assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -53,13 +53,13 @@ class BoardTest {
         val source = Position(3, 3)
         val board = Board(false)
         board.putPiece(Rook(Color.BLACK, source))
-        val piece = board.getPieceAt(source)
+        val piece = board.findPiece(source)
         Assertions.assertThat(piece).isNotNull
         Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(1, 3)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.getPieceAt(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.getPieceAt(source)).isNull()
+        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
+        Assertions.assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -72,9 +72,9 @@ class BoardTest {
         println(board)
         board.move(passer, Position(0, 2))
         println(board)
-        Assertions.assertThat(board.getPieceAt(Position(0, 3))).isNull()
+        Assertions.assertThat(board.findPiece(Position(0, 3))).isNull()
         Assertions.assertThat(board.findPieceById(passible.id)).isNull()
-        Assertions.assertThat(board.getPieceAt(Position(0, 2))).isEqualTo(passer)
+        Assertions.assertThat(board.findPiece(Position(0, 2))).isEqualTo(passer)
     }
 
     @Test

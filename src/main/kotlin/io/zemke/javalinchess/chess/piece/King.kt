@@ -14,10 +14,10 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
      * Like [allowedNextPositions] but without filtering positions which are in check.
      */
     fun allowedNextPositionsWithoutAllowMoveIntoCheck(board: Board): Set<Position> {
-        val current = board.findPositionOfPiece(this)
+        val current = board.findPosition(this)
         val ownPieces = board.ownPieces(this.color)
                 .mapNotNull { board.findPieceById(it.id) }
-                .map { board.findPositionOfPiece(it) }
+                .map { board.findPosition(it) }
         return setOf(
                 Position.ifValid(current.file + 1, current.rank),
                 Position.ifValid(current.file - 1, current.rank),
@@ -44,16 +44,16 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
             rookPositions = (6 downTo 5).map { Position(it, position.rank) }
             kingPositions = (5..6).map { Position(it, position.rank) }
         }
-        return rookPositions.none { board.getPieceAt(it) != null }
-                && kingPositions.none { board.getPieceAt(it) != null }
+        return rookPositions.none { board.findPiece(it) != null }
+                && kingPositions.none { board.findPiece(it) != null }
                 && kingPositions.none { inCheck(Board(board).move(this, it)) }
                 && board.findMovements(rook).isEmpty() && board.findMovements(this).isEmpty()
                 && !inCheck(board)
     }
 
     fun castle(board: Board, rook: Rook) {
-        val rookPosition = board.findPositionOfPiece(rook)
-        val (file, rank) = board.findPositionOfPiece(this)
+        val rookPosition = board.findPosition(rook)
+        val (file, rank) = board.findPosition(this)
         when (rookPosition.file) {
             7 -> {
                 board.move(rook, Position(file + 1, rank))
@@ -79,7 +79,7 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
                     }
                 }
                 .flatten()
-                .contains(board.findPositionOfPiece(this))
+                .contains(board.findPosition(this))
     }
 
     fun checkmated(board: Board): Boolean {

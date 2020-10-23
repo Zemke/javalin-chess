@@ -25,7 +25,7 @@ class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
     }
 
     override fun allowedNextPositions(board: Board): Set<Position> {
-        val current = board.findPositionOfPiece(this)
+        val current = board.findPosition(this)
         val allowedOnEmptyBoard = generallyAllowedForPiece(current)
         val result = mutableSetOf(*allowedOnEmptyBoard.toTypedArray())
 
@@ -52,7 +52,7 @@ class Rook(color: Color, position: Position) : Piece("Rook", color, position) {
                 true -> Position(fileOrRank, current.rank)
                 false -> Position(current.file, fileOrRank)
             }
-            val pieceAtPos = board.getPieceAt(subjectPosition)
+            val pieceAtPos = board.findPiece(subjectPosition)
             if (pieceAtPos != null) {
                 if (pieceAtPos.isOwn(color)) {
                     val progressionToRemove = IntProgression.fromClosedRange(

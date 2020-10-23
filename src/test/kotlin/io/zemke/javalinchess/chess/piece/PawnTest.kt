@@ -63,7 +63,7 @@ class PawnTest {
             queen = Queen(c, p)
             queen!!
         }
-        assertThat(board.getPieceAt(position)).isEqualTo(queen)
+        assertThat(board.findPiece(position)).isEqualTo(queen)
     }
 
     @Test

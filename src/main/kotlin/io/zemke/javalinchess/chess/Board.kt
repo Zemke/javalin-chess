@@ -69,11 +69,11 @@ class Board : Entity {
     /**
      * @throws RuntimeException When the Piece could not be found on the Board.
      */
-    fun findPositionOfPiece(piece: Piece): Position {
+    fun findPosition(piece: Piece): Position {
         grid.forEachIndexed { rankIdx, rank ->
             rank.forEachIndexed { idx, f ->
                 if (f == piece) {
-                    return@findPositionOfPiece Position(idx, rankIdx)
+                    return@findPosition Position(idx, rankIdx)
                 }
             }
         }
@@ -81,8 +81,8 @@ class Board : Entity {
     }
 
     fun move(piece: Piece, target: Position): Board {
-        val current = findPositionOfPiece(piece)
-        if (piece is Pawn && getPieceAt(target) == null && isPassible(Position(target.file, current.rank))) {
+        val current = findPosition(piece)
+        if (piece is Pawn && findPiece(target) == null && isPassible(Position(target.file, current.rank))) {
             grid[current.rank][target.file] = null
         }
         grid[target.rank][target.file] = piece
@@ -101,7 +101,7 @@ class Board : Entity {
         }
     }
 
-    fun getPieceAt(position: Position): Piece? {
+    fun findPiece(position: Position): Piece? {
         return grid[position.rank][position.file]
     }
 
@@ -110,7 +110,7 @@ class Board : Entity {
             if (grid.flatten().contains(piece)) {
                 throw IllegalArgumentException("Piece $piece is already on the Board.")
             }
-            if (getPieceAt(piece.position) != null) {
+            if (findPiece(piece.position) != null) {
                 throw IllegalArgumentException("Position ${piece.position} is already occupied.")
             }
         }
@@ -135,7 +135,7 @@ class Board : Entity {
 
     /** en passant */
     fun isPassible(position: Position): Boolean {
-        val piece = getPieceAt(position)
+        val piece = findPiece(position)
         if (piece is Pawn && movements.isNotEmpty() && movements.last().first == piece) {
             val (from, to) = findMovements(piece).last()
             return piece.isLongLeap(from, to)
@@ -154,20 +154,20 @@ class Board : Entity {
         return movements.zipWithNext()
     }
 
-    fun getRook(side: Rook.Side) =
-            getPieces<Rook>(nextTurn).find { it.side == side }
+    fun findRook(side: Rook.Side) =
+            findPieces<Rook>(nextTurn).find { it.side == side }
 
     private fun castlingAllowed(side: Rook.Side) =
-            getRook(side)
-                    ?.let { getPiece<King>(nextTurn)?.castlingAllowed(this, it) ?: false }
+            findRook(side)
+                    ?.let { findPiece<King>(nextTurn)?.castlingAllowed(this, it) ?: false }
                     ?: false
 
-    private inline fun <reified T : Piece> getPiece(color: Color): T? =
+    private inline fun <reified T : Piece> findPiece(color: Color): T? =
             grid.flatten()
                     .filterNotNull()
                     .find { it is T && it.color == color } as T
 
-    private inline fun <reified T : Piece> getPieces(color: Color): Set<T> =
+    private inline fun <reified T : Piece> findPieces(color: Color): Set<T> =
             grid.asSequence().flatten()
                     .filterNotNull()
                     .filter { it is T && it.color == color }

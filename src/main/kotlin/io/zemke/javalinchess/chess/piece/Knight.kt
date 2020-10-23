@@ -5,10 +5,10 @@ import io.zemke.javalinchess.chess.Board
 class Knight(color: Color, position: Position) : Piece("Knight", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
-        val current = board.findPositionOfPiece(this)
+        val current = board.findPosition(this)
         val ownPieces = board.ownPieces(this.color)
                 .mapNotNull { board.findPieceById(it.id) }
-                .map { board.findPositionOfPiece(it) }
+                .map { board.findPosition(it) }
         return setOf(
                 Position.ifValid(current.file + 2, current.rank - 1),
                 Position.ifValid(current.file + 2, current.rank + 1),

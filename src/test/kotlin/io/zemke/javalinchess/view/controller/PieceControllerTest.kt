@@ -29,7 +29,7 @@ class PieceControllerTest {
         val ctx = mockk<Context>(relaxed = true)
         mockkConstructor(DelegationContext::class)
         val board = Board(true)
-        val piece = board.getPieceAt(Position(0, 6))!!
+        val piece = board.findPiece(Position(0, 6))!!
         every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
         every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns piece.id
         every { memcached.retrieve<Board>(board.id) } returns board

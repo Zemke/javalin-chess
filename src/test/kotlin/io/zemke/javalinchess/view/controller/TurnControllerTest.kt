@@ -34,7 +34,7 @@ class TurnControllerTest {
         mockkConstructor(DelegationContext::class)
         val board = Board(true)
         board.uuidWhite = authUuid
-        val piece = board.getPieceAt(Position(0, 6)) ?: throw RuntimeException()
+        val piece = board.findPiece(Position(0, 6)) ?: throw RuntimeException()
         every { memcached.retrieve<Board>(board.id) } returns board
         val target = Position(0, 4)
         val newBoard = Board(true).move(piece, target)

@@ -5,7 +5,7 @@ import io.zemke.javalinchess.chess.Board
 class Bishop(color: Color, position: Position) : Piece("Bishop", color, position) {
 
     override fun allowedNextPositions(board: Board): Set<Position> {
-        val current = board.findPositionOfPiece(this)
+        val current = board.findPosition(this)
         return setOf(
                 *addPositions(board, current, Int::inc, Int::inc),
                 *addPositions(board, current, Int::dec, Int::dec),
@@ -24,7 +24,7 @@ class Bishop(color: Color, position: Position) : Piece("Bishop", color, position
             rank = rankModifierFn(rank)
             if (!Position.isValidPosition(file, rank)) break
             val nextPosition = Position(file, rank)
-            val pieceAt = board.getPieceAt(nextPosition)
+            val pieceAt = board.findPiece(nextPosition)
             if (pieceAt != null) {
                 if (pieceAt.isOwn(this.color)) {
                     break

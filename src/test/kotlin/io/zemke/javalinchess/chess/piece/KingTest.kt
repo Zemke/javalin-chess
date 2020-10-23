@@ -47,9 +47,9 @@ class KingTest {
         assertThat(king.castlingAllowed(board, rookKingside)).isTrue()
         king.castle(board, rookKingside)
         println("after castling\n$board")
-        assertThat(board.getPieceAt(Position(6, 0))).isEqualTo(king)
-        assertThat(board.getPieceAt(Position(5, 0))).isEqualTo(rookKingside)
-        assertThat(board.getPieceAt(Position(0, 0))).isEqualTo(rookQueenside)
+        assertThat(board.findPiece(Position(6, 0))).isEqualTo(king)
+        assertThat(board.findPiece(Position(5, 0))).isEqualTo(rookKingside)
+        assertThat(board.findPiece(Position(0, 0))).isEqualTo(rookQueenside)
     }
 
     @Test
@@ -65,9 +65,9 @@ class KingTest {
         assertThat(king.castlingAllowed(board, rookQueenside)).isTrue()
         king.castle(board, rookQueenside)
         println("after castling\n$board")
-        assertThat(board.getPieceAt(Position(2, 0))).isEqualTo(king)
-        assertThat(board.getPieceAt(Position(7, 0))).isEqualTo(rookKingside)
-        assertThat(board.getPieceAt(Position(3, 0))).isEqualTo(rookQueenside)
+        assertThat(board.findPiece(Position(2, 0))).isEqualTo(king)
+        assertThat(board.findPiece(Position(7, 0))).isEqualTo(rookKingside)
+        assertThat(board.findPiece(Position(3, 0))).isEqualTo(rookQueenside)
     }
 
     @Test

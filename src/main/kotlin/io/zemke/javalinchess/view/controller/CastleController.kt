@@ -25,7 +25,7 @@ class CastleController {
         if (king !is King) throw BadRequestResponse("Only King can perform castling")
         if (!board.castlingAllowed.contains(side))
             throw BadRequestResponse("Castling is not allowed at the moment")
-        board.getRook(side)?.let { rook -> king.castle(board, rook) }
+        board.findRook(side)?.let { rook -> king.castle(board, rook) }
                 ?: throw BadRequestResponse("No $side rook.")
         ctx.status(200)
         ctx.json(board)
