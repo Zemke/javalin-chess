@@ -27,15 +27,8 @@ class CastleController {
         board.findRook(side)?.let { rook -> king.castle(board, rook) }
                 ?: throw BadRequestResponse("No $side rook.")
         board.castlingAllowed.clear()
-        when (memcached.store(board.id, board)) {
-            true -> {
-                ctx.status(201)
-                ctx.json(board)
-            }
-            false -> {
-                ctx.status(400)
-                ctx.json("Couldn't store new board.")
-            }
-        }
+        memcached.store(board.id, board)
+        ctx.status(201)
+        ctx.json(board)
     }
 }

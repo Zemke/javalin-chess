@@ -54,12 +54,8 @@ class TurnController {
             }
         }
         board.nextTurn()
-        if (!memcached.store(board.id, board)) {
-            ctx.status(400)
-            ctx.json("Couldn't store new board.")
-        } else {
-            ctx.status(201)
-            ctx.json(board)
-        }
+        memcached.store(board.id, board)
+        ctx.status(201)
+        ctx.json(board)
     }
 }

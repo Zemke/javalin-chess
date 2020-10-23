@@ -10,7 +10,9 @@ class Memcached {
 
     fun store(key: String, obj: Any): Boolean {
         client[key, 3600] = obj
-        return client.touch(key, 60 * 60 * 24) // a day
+        val touch = client.touch(key, 60 * 60 * 24) // a day
+        if (!touch) throw RuntimeException("False returned by Memcached touch.")
+        return touch
     }
 
     fun <T> retrieve(key: String): T {

@@ -1,7 +1,6 @@
 package io.zemke.javalinchess.view.controller
 
 import io.javalin.http.Context
-import io.javalin.http.InternalServerErrorResponse
 import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
@@ -18,10 +17,8 @@ class BoardController {
         val ctx = DelegationContext(_ctx)
         val board = Board(true)
         board.uuidWhite = ctx.header("auth")
-        when (memcached.store(board.id, board)) {
-            true -> ctx.json(board)
-            else -> throw InternalServerErrorResponse()
-        }
+        memcached.store(board.id, board)
+        ctx.json(board)
         ctx.status(201)
     }
 
