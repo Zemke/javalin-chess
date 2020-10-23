@@ -1,7 +1,15 @@
 <template id="board">
   <div>
-    <pre v-if="debug">{{allowedNextPositions}}</pre>
+    <pre v-if="debug">{{board.castlingAllowed}}</pre>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
+    <button class="castling kingside" v-if="board.castlingAllowed.includes('KINGSIDE')">
+      <span>♚</span>
+      <span>♜</span>
+    </button>
+    <button class="castling queenside" v-if="board.castlingAllowed.includes('QUEENSIDE')">
+      <span>♜</span>
+      <span>♚</span>
+    </button>
     <div class="board" v-if="board != null">
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
@@ -91,6 +99,16 @@
             this.allowedNextPositions = [];
           });
       },
+      castleQueenside: function () {
+        fetch(`api/board/${this.board.id}/castle/queenside`, {method: 'POST'})
+          .then(res => res.json())
+          .then(res => this.board = res);
+      },
+      castleKingside: function () {
+        fetch(`api/board/${this.board.id}/castle/kingside`, {method: 'POST'})
+          .then(res => res.json())
+          .then(res => this.board = res);
+      },
       isAllowedNextPosition(file, rank) {
         return !!this.allowedNextPositions
           .find(pos => pos.file === file && pos.rank === rank)
@@ -174,6 +192,61 @@
   .piece.allowedNextPosition:hover {
     transform: scale(1.2);
     box-shadow: 0 0 5px black;
+  }
+
+  .castling {
+    position: absolute;
+    left: 1rem;
+  }
+
+  .castling.queenside {
+    top: 11rem;
+  }
+
+  button.castling {
+    padding: 0 .5rem;
+    margin: 0;
+    font-size: 3.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    height: 4rem;
+    width: 4rem;
+    overflow: hidden;
+    outline: none;
+    border: none;
+    box-shadow: 0 0 5px #000;
+  }
+
+  button.castling:active {
+    border: 1px outset black;
+  }
+
+  .castling span {
+    display: inline-block;
+    position: absolute;
+    top: -.7rem;
+    left: -.4rem;
+  }
+
+  .castling span:last-child {
+    left: 1.3rem;
+    top: .5rem;
+  }
+
+  button.castling.white {
+    background-color: #000;
+  }
+
+  button.castling.black {
+    background-color: #fff;
+  }
+
+  .castling.white {
+    color: #fff;
+  }
+
+  .castling.black {
+    color: #000;
   }
 
   .nextTurn {
