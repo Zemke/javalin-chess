@@ -19,9 +19,8 @@ class CastleController {
     fun castle(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
         val side = Rook.Side.valueOf(ctx.pathParam("side").toUpperCase())
-        val pieceId = ctx.pathParam("pieceKey")
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
-        val king = board.findPieceById(pieceId) ?: throw RuntimeException()
+        val king = board.findPiece<King>(board.nextTurn)
         if (king !is King) throw BadRequestResponse("Only King can perform castling")
         if (!board.castlingAllowed.contains(side))
             throw BadRequestResponse("Castling is not allowed at the moment")

@@ -157,15 +157,15 @@ class Board : Entity {
     fun findRook(side: Rook.Side) =
             findPieces<Rook>(nextTurn).find { it.side == side }
 
+    inline fun <reified T : Piece> findPiece(color: Color): T? =
+            grid.flatten()
+                    .filterNotNull()
+                    .find { it is T && it.color == color } as T
+
     private fun castlingAllowed(side: Rook.Side) =
             findRook(side)
                     ?.let { findPiece<King>(nextTurn)?.castlingAllowed(this, it) ?: false }
                     ?: false
-
-    private inline fun <reified T : Piece> findPiece(color: Color): T? =
-            grid.flatten()
-                    .filterNotNull()
-                    .find { it is T && it.color == color } as T
 
     private inline fun <reified T : Piece> findPieces(color: Color): Set<T> =
             grid.asSequence().flatten()

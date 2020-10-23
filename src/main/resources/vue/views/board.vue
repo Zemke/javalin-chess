@@ -2,11 +2,14 @@
   <div>
     <pre v-if="debug">{{board.castlingAllowed}}</pre>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
-    <button class="castling kingside" v-if="board.castlingAllowed.includes('KINGSIDE')">
+    <button class="castling kingside"
+            v-if="board.castlingAllowed.includes('KINGSIDE')"
+            v-on:click="castle('KINGSIDE')">
       <span>♚</span>
       <span>♜</span>
     </button>
-    <button class="castling queenside" v-if="board.castlingAllowed.includes('QUEENSIDE')">
+    <button class="castling queenside"
+            v-on:click="castle('QUEENSIDE')">
       <span>♜</span>
       <span>♚</span>
     </button>
@@ -99,13 +102,8 @@
             this.allowedNextPositions = [];
           });
       },
-      castleQueenside: function () {
-        fetch(`api/board/${this.board.id}/castle/queenside`, {method: 'POST'})
-          .then(res => res.json())
-          .then(res => this.board = res);
-      },
-      castleKingside: function () {
-        fetch(`api/board/${this.board.id}/castle/kingside`, {method: 'POST'})
+      castle(side) {
+        fetch(`api/board/${this.board.id}/castle/${side.toLowerCase()}`, {method: 'POST'})
           .then(res => res.json())
           .then(res => this.board = res);
       },
