@@ -11,13 +11,13 @@
     </div>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
     <button class="castling kingside"
-            v-if="board.castlingAllowed.includes('KINGSIDE')"
+            v-if="board.castlingAllowed.includes('KINGSIDE') && isMyTurn"
             v-on:click="castle('KINGSIDE')">
       <span>♚</span>
       <span>♜</span>
     </button>
     <button class="castling queenside"
-            v-if="board.castlingAllowed.includes('QUEENSIDE')"
+            v-if="board.castlingAllowed.includes('QUEENSIDE') && isMyTurn"
             v-on:click="castle('QUEENSIDE')">
       <span>♜</span>
       <span>♚</span>
@@ -108,6 +108,13 @@
         poll();
       })
     },
+    computed: {
+      isMyTurn() {
+        if (this.board?.nextTurn == null) return false;
+        return ((this.board.nextTurn === 'WHITE' && (this.board.uuidWhite === uuid || this.board.uuidWhite == null))
+          || (this.board.nextTurn === 'BLACK' && (this.board.uuidBlack === uuid || this.board.uuidBlack == null)))
+      }
+    },
     methods: {
       select(piece) {
         if (piece.id === this.selected?.id) {
@@ -115,8 +122,7 @@
           this.allowedNextPositions = [];
           return;
         }
-        if ((this.board.nextTurn === 'WHITE' && (this.board.uuidWhite !== uuid && this.board.uuidWhite != null))
-          || (this.board.nextTurn === 'BLACK' && (this.board.uuidBlack !== uuid && this.board.uuidBlack != null))) {
+        if (!this.isMyTurn) {
           return;
         }
         this.selected = piece;
