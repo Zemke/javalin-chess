@@ -195,19 +195,19 @@
   }
 
   .rank:nth-child(odd) .piece:nth-child(even) {
-    background-color: #ffce9e;
+    background-color: #d18b47;
   }
 
   .rank:nth-child(odd) .piece:nth-child(odd) {
-    background-color: #d18b47;
-  }
-
-  .rank:nth-child(even) .piece:nth-child(odd) {
     background-color: #ffce9e;
   }
 
-  .rank:nth-child(even) .piece:nth-child(even) {
+  .rank:nth-child(even) .piece:nth-child(odd) {
     background-color: #d18b47;
+  }
+
+  .rank:nth-child(even) .piece:nth-child(even) {
+    background-color: #ffce9e;
   }
 
   .rank:first-child .piece:first-child {
