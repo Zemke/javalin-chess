@@ -9,6 +9,7 @@
       <span>♜</span>
     </button>
     <button class="castling queenside"
+            v-if="board.castlingAllowed.includes('QUEENSIDE')"
             v-on:click="castle('QUEENSIDE')">
       <span>♜</span>
       <span>♚</span>
