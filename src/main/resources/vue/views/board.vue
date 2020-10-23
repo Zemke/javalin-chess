@@ -47,6 +47,14 @@
   </div>
 </template>
 <script>
+  const uuid = localStorage.getItem('uuid') || (() => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  })();
+  localStorage.setItem('uuid', uuid);
+
   Vue.component("board", {
     template: "#board",
     filters: {
@@ -79,7 +87,7 @@
             return res.id;
           });
       } else {
-        boardIdPromise = fetch("api/board", {method: 'POST'})
+        boardIdPromise = fetch("api/board", {method: 'POST', headers: {'auth': uuid}})
           .then(res => res.json())
           .then(res => {
             searchParams.set('board', res.id);
@@ -140,7 +148,7 @@
           {
             method: 'POST',
             body: JSON.stringify({piece: piece.id, target: {file, rank}}),
-            headers: {'Content-Type': 'application/json'}
+            headers: {'Content-Type': 'application/json', 'auth': uuid}
           })
           .then(res => res.json())
           .then(res => {
