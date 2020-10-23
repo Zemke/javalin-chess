@@ -9,6 +9,7 @@ import io.mockk.junit5.MockKExtension
 import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.chess.Board
 import io.zemke.javalinchess.chess.piece.Color
+import io.zemke.javalinchess.chess.piece.Pawn
 import io.zemke.javalinchess.chess.piece.Position
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.view.model.TurnDto
@@ -48,5 +49,30 @@ class TurnControllerTest {
         assertThat(boardSlot.captured).isEqualTo(newBoard)
         assertThat(boardSlot.captured.nextTurn).isEqualTo(Color.BLACK)
         verify { ctx.status(201) }
+    }
+
+    @Test
+    fun `POST new turn with promotion`() {
+        val ctx = mockk<Context>(relaxed = true)
+        mockkConstructor(DelegationContext::class)
+        val board = Board(false)
+        val pawn = Pawn(Color.BLACK, Position(4, 6))
+        board.putPiece(pawn)
+        board.nextTurn()
+        val target = Position(4, 7)
+        val turnDto = TurnDto(piece = pawn.id, target = target, promotion = "Queen")
+        every { anyConstructed<DelegationContext>().body() } returns JavalinJson.toJson(turnDto)
+        every { anyConstructed<DelegationContext>().header("auth") } returns authUuid
+        every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("boardKey") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns pawn.id
+        val boardSlot = slot<Board>()
+        every { memcached.retrieve<Board>(board.id) } returns board
+        every { memcached.store(board.id, capture(boardSlot)) } returns true
+        turnController.create(ctx)
+        val promotion = boardSlot.captured.findPiece(target)
+        assertThat(promotion).isNotNull
+        assertThat(promotion!!.position).isEqualTo(target)
+        assertThat(promotion.color).isEqualTo(pawn.color)
     }
 }

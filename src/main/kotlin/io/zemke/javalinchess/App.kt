@@ -5,10 +5,7 @@ import io.javalin.apibuilder.ApiBuilder.*
 import io.javalin.plugin.rendering.vue.VueComponent
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
-import io.zemke.javalinchess.view.controller.BoardController
-import io.zemke.javalinchess.view.controller.CastleController
-import io.zemke.javalinchess.view.controller.PieceController
-import io.zemke.javalinchess.view.controller.TurnController
+import io.zemke.javalinchess.view.controller.*
 
 fun main() {
     JavalinChess().run()

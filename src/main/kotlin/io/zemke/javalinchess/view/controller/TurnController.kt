@@ -7,7 +7,7 @@ import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.chess.Board
-import io.zemke.javalinchess.chess.piece.Color
+import io.zemke.javalinchess.chess.piece.*
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.view.ViewUtil
 import io.zemke.javalinchess.view.model.TurnDto
@@ -41,6 +41,18 @@ class TurnController {
             board.uuidBlack = auth
         }
         board.move(piece, turn.target)
+        if (piece.promotable(board) && piece is Pawn) { // the latter condition could be a contract
+            piece.promote(board) { color, position ->
+                when (turn.promotion?.let { it.toLowerCase() }) {
+                    "bishop" -> Bishop(color, position)
+                    "knight" -> Knight(color, position)
+                    "rook" -> Rook(color, position)
+                    "queen" -> Queen(color, position)
+                    else -> throw BadRequestResponse(
+                            "Valid promotion targets are Bishop, Knight, Rook, Queen.")
+                }
+            }
+        }
         board.nextTurn()
         if (!memcached.store(board.id, board)) {
             ctx.status(400)

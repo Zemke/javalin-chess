@@ -57,12 +57,6 @@ class Pawn(color: Color, position: Position) : Piece("Pawn", color, position) {
         return piece
     }
 
-    fun promotable(board: Board): Boolean {
-        val (_, rank) = board.findPosition(this)
-        return ((color == BLACK && rank == 7)
-                || (color == WHITE && rank == 0))
-    }
-
     private fun longLeapAllowed(board: Board): Boolean {
         val current = board.findPosition(this)
         return ((color == BLACK && current.rank == 1)
