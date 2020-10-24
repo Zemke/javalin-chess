@@ -2,10 +2,15 @@ package io.zemke.javalinchess
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.http.staticfiles.Location
+import io.javalin.plugin.rendering.vue.JavalinVue
 import io.javalin.plugin.rendering.vue.VueComponent
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
-import io.zemke.javalinchess.view.controller.*
+import io.zemke.javalinchess.view.controller.BoardController
+import io.zemke.javalinchess.view.controller.CastleController
+import io.zemke.javalinchess.view.controller.PieceController
+import io.zemke.javalinchess.view.controller.TurnController
 
 @Zemke
 class JavalinChess {
@@ -23,6 +28,7 @@ class JavalinChess {
     private lateinit var castleController: CastleController
 
     fun run() {
+        JavalinVue.rootDirectory("/vue", Location.CLASSPATH)
         val app = Javalin.create { config ->
             config.enableWebjars()
             config.addStaticFiles("/public")
