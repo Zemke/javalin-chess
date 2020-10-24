@@ -7,10 +7,6 @@ import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.view.controller.*
 
-fun main() {
-    JavalinChess().run()
-}
-
 @Zemke
 class JavalinChess {
 
