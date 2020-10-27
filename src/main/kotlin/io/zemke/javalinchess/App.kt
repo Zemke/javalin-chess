@@ -28,7 +28,9 @@ class JavalinChess {
     private lateinit var castleController: CastleController
 
     fun run() {
-        JavalinVue.rootDirectory("/vue", Location.CLASSPATH)
+        if (this::class.java.getResource("/vue").toURI().scheme == "jar") {
+            JavalinVue.rootDirectory("/vue", Location.CLASSPATH)
+        }
         val app = Javalin.create { config ->
             config.enableWebjars()
             config.addStaticFiles("/public")
