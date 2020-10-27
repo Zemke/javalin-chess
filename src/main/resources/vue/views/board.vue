@@ -9,6 +9,11 @@
         <button v-on:click="promote('bishop')">♝</button>
       </div>
     </div>
+    <div class="captured">
+      <div v-for="piece in board.captured" v-bind:class="piece.color.toLowerCase()">
+        {{piece | piece}}
+      </div>
+    </div>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
     <button class="castling kingside"
             v-if="board.castlingAllowed.includes('KINGSIDE') && isMyTurn"
@@ -391,6 +396,28 @@
     box-shadow: 0 0 1rem black;
     top: 1.5rem;
     right: 3rem;
+  }
+
+  .captured {
+    display: flex;
+    flex-direction: column-reverse;
+    position: absolute;
+    font-size: 3rem;
+    background-color: rgba(248, 248, 248, 0.6);
+    backdrop-filter: blur(20px);
+    padding: 1rem;
+    border-radius: 1rem;
+    right: 2rem;
+  }
+
+  .captured .white {
+    color: white;
+    text-shadow: 0 0 5px #000;
+  }
+
+  .captured .black {
+    color: black;
+    text-shadow: 0 0 5px #fff;
   }
 
   .nextTurn.white {
