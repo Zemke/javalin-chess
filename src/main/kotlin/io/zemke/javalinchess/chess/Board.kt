@@ -15,6 +15,7 @@ class Board : Entity {
         private set
     var uuidWhite: String? = null
     var uuidBlack: String? = null
+    val captured = mutableSetOf<Piece>()
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
@@ -83,8 +84,10 @@ class Board : Entity {
     fun move(piece: Piece, target: Position): Board {
         val current = findPosition(piece)
         if (piece is Pawn && findPiece(target) == null && isPassible(Position(target.file, current.rank))) {
+            captured.add(grid[current.rank][target.file]!!)
             grid[current.rank][target.file] = null
         }
+        grid[target.rank][target.file]?.let { captured.add(it) }
         grid[target.rank][target.file] = piece
         grid[current.rank][current.file] = null
         movements.add(piece to target)

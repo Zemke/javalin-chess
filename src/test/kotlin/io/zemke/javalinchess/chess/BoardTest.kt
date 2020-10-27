@@ -75,6 +75,7 @@ class BoardTest {
         Assertions.assertThat(board.findPiece(Position(0, 3))).isNull()
         Assertions.assertThat(board.findPieceById(passible.id)).isNull()
         Assertions.assertThat(board.findPiece(Position(0, 2))).isEqualTo(passer)
+        Assertions.assertThat(board.captured).containsExactly(passible)
     }
 
     @Test
