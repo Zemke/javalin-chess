@@ -25,10 +25,9 @@
     <div class="board" v-if="board != null">
       <div v-for="(rank, rankIdx) in board.grid" class="rank">
         <div v-for="(piece, fileIdx) in rank" class="piece"
-             v-bind:class="{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx), selected: selected.id != null && selected.id === piece?.id}">
+             v-bind:class="[{ allowedNextPosition: isAllowedNextPosition(fileIdx, rankIdx), selected: selected.id != null && selected.id === piece?.id}, piece?.color.toLowerCase()]">
           <button v-if="piece != null"
                   v-bind:disabled="piece.color !== board.nextTurn && !isAllowedNextPosition(fileIdx, rankIdx)"
-                  v-bind:class="piece.color.toLowerCase()"
                   v-on:click="isAllowedNextPosition(fileIdx, rankIdx) ? move(fileIdx, rankIdx) : select(piece)">
             {{piece | piece}}
           </button>
@@ -250,12 +249,12 @@
     outline: none;
   }
 
-  .piece button.white {
+  .piece.white button {
     color: white;
     text-shadow: 0 0 5px #000;
   }
 
-  .piece button.black {
+  .piece.black button {
     color: black;
     text-shadow: 0 0 5px #fff;
   }
@@ -264,11 +263,11 @@
     cursor: inherit;
   }
 
-  .piece button.white[disabled] {
+  .piece.white button[disabled] {
     color: white
   }
 
-  .piece button.black[disabled] {
+  .piece.black button[disabled] {
     color: black;
   }
 
@@ -330,19 +329,19 @@
     top: .5rem;
   }
 
-  button.castling.white {
+  .piece.white button.castling {
     background-color: #000;
   }
 
-  button.castling.black {
+  .piece.black button.castling {
     background-color: #fff;
   }
 
-  .castling.white {
+  .piece.white .castling {
     color: #fff;
   }
 
-  .castling.black {
+  .piece.black .castling {
     color: #000;
   }
 
