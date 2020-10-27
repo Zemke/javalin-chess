@@ -112,16 +112,33 @@
         if (this.board?.nextTurn == null) return false;
         return ((this.board.nextTurn === 'WHITE' && (this.board.uuidWhite === uuid || this.board.uuidWhite == null))
           || (this.board.nextTurn === 'BLACK' && (this.board.uuidBlack === uuid || this.board.uuidBlack == null)))
+      },
+      lastMovement() {
+        const last = this.board.movements[this.board.movements.length - 1];
+        const to = last.second;
+        const movementsOfPieces = this.board.movements
+          .filter(m => m.first.id === last.first.id)
+        let from;
+        if (movementsOfPieces.length <= 1) {
+          from = last.first.position;
+        } else {
+          from = movementsOfPieces[movementsOfPieces.length - 2].second;
+        }
+        return {from, to}
       }
     },
     methods: {
       pieceClasses(fileIdx, rankIdx, piece) {
+        const {to, from} = this.lastMovement;
         return [
           {
             allowedNextPosition: this.isAllowedNextPosition(fileIdx, rankIdx),
-            selected: this.selected.id != null && this.selected.id === piece?.id
+            selected: this.selected.id != null && this.selected.id === piece?.id,
+            ...to != null && {to: to.file === fileIdx && to.rank === rankIdx},
+            ...from != null && {from: from.file === fileIdx && from.rank === rankIdx},
           },
-          piece?.color.toLowerCase()]
+          piece?.color.toLowerCase()
+        ]
       },
       select(piece) {
         if (piece.id === this.selected?.id) {
