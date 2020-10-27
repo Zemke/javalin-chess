@@ -115,14 +115,16 @@
       },
       lastMovement() {
         const last = this.board.movements[this.board.movements.length - 1];
-        const to = last.second;
+        if (last == null) return {from: null, to: null};
+        const to = {position: last.second, piece: last.first};
         const movementsOfPieces = this.board.movements
           .filter(m => m.first.id === last.first.id)
         let from;
         if (movementsOfPieces.length <= 1) {
-          from = last.first.position;
+          from = {position: last.first.position, piece: last.first};
         } else {
-          from = movementsOfPieces[movementsOfPieces.length - 2].second;
+          const movement = movementsOfPieces[movementsOfPieces.length - 2];
+          from = {position: movement.second, piece: movement.first};
         }
         return {from, to}
       }
@@ -134,10 +136,10 @@
           {
             allowedNextPosition: this.isAllowedNextPosition(fileIdx, rankIdx),
             selected: this.selected.id != null && this.selected.id === piece?.id,
-            ...to != null && {to: to.file === fileIdx && to.rank === rankIdx},
-            ...from != null && {from: from.file === fileIdx && from.rank === rankIdx},
+            ...to != null && {to: to.position.file === fileIdx && to.position.rank === rankIdx},
+            ...from != null && {from: from.position.file === fileIdx && from.position.rank === rankIdx},
           },
-          piece?.color.toLowerCase()
+          piece != null ? piece.color.toLowerCase() : (from != null && from.piece.color.toLowerCase())
         ]
       },
       select(piece) {
@@ -316,26 +318,14 @@
     box-shadow: 0 0 5px black;
   }
 
-  .piece.from::after,
-  .piece.to::after {
-    content: "";
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 50%;
-    bottom: 0.2rem;
-    width: 2.9rem;
-    height: 1.5rem;
-    position: absolute;
+  .piece.white.to,
+  .piece.white.from {
+    box-shadow: inset 0 0 0 2px white;
   }
 
-  .piece.white.to::after,
-  .piece.white.from::after {
-    border-color: white;
-  }
-
-  .piece.black.to::after,
-  .piece.black.from::after {
-    border-color: black;
+  .piece.black.to,
+  .piece.black.from {
+    box-shadow: inset 0 0 0 2px black;
   }
 
   .castling {
