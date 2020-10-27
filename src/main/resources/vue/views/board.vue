@@ -231,6 +231,7 @@
     width: 4.5rem;
     height: 4.5rem;
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     align-content: center;
@@ -288,6 +289,28 @@
   .piece.allowedNextPosition:hover {
     transform: scale(1.2);
     box-shadow: 0 0 5px black;
+  }
+
+  .piece.from::after,
+  .piece.to::after {
+    content: "";
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 50%;
+    bottom: 0.2rem;
+    width: 2.9rem;
+    height: 1.5rem;
+    position: absolute;
+  }
+
+  .piece.white.to::after,
+  .piece.white.from::after {
+    border-color: white;
+  }
+
+  .piece.black.to::after,
+  .piece.black.from::after {
+    border-color: black;
   }
 
   .castling {
