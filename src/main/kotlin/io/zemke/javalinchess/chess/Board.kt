@@ -136,6 +136,14 @@ class Board : Entity {
                 .filter { it.color != color }
     }
 
+    fun checkmated() {
+        TODO("checkmated() is not yet implemented")
+    }
+
+    fun stalemated() {
+        TODO("stalemated() is not yet implemented")
+    }
+
     /** en passant */
     fun isPassible(position: Position): Boolean {
         val piece = findPiece(position)

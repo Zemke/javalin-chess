@@ -1,6 +1,7 @@
 package io.zemke.javalinchess.view.controller
 
 import io.javalin.http.Context
+import io.javalin.plugin.json.JavalinJson
 import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
@@ -24,5 +25,17 @@ class BoardController {
 
     fun get(ctx: Context) {
         ctx.json(memcached.retrieve<Board>(ctx.pathParam("key")))
+    }
+
+    fun checkmated(_ctx: Context) {
+        val ctx = DelegationContext(_ctx)
+        val board = JavalinJson.fromJson(ctx.body(), Board::class.java)
+        TODO("terminal is not yet implemented.")
+    }
+
+    fun stalemated(_ctx: Context) {
+        val ctx = DelegationContext(_ctx)
+        val board = JavalinJson.fromJson(ctx.body(), Board::class.java)
+        TODO("stalemated is not yet implemented.")
     }
 }

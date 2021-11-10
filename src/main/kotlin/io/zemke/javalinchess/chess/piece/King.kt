@@ -83,6 +83,7 @@ class King(color: Color, position: Position) : Piece("King", color, position) {
     }
 
     fun checkmated(board: Board): Boolean {
+        // TODO check can be escaped by capturing the attacking piece
         return allowedNextPositions(board)
                 .all { inCheck(Board(board).move(this@King, it)) }
     }
