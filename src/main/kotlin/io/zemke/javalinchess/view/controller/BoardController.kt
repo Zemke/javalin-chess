@@ -27,12 +27,14 @@ class BoardController {
         ctx.json(memcached.retrieve<Board>(ctx.pathParam("key")))
     }
 
+    // TODO probably better as state as part of the Board entity
     fun checkmated(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
         val board = JavalinJson.fromJson(ctx.body(), Board::class.java)
         TODO("terminal is not yet implemented.")
     }
 
+    // TODO probably better as state as part of the Board entity
     fun stalemated(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
         val board = JavalinJson.fromJson(ctx.body(), Board::class.java)

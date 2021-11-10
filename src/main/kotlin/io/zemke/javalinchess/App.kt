@@ -36,6 +36,7 @@ class JavalinChess {
             config.addStaticFiles("/public")
         }.start(7000)
         app.get("/", VueComponent("<board></board>"))
+        // TODO "spinoff" flag that when given instantiates a new board rather than mutating the existing
         app.routes {
             path("api") {
                 get("/") { ctx -> ctx.result("Hello World") }
