@@ -119,6 +119,8 @@ class BoardTest {
         val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
         board.putPiece(Rook(WHITE, Position(3, 0)))
+        board.nextTurn()
+        assertThat(board.nextTurn).isEqualTo(BLACK)
         assertThat(kingInCheck.inCheck(board)).isTrue()
         assertThat(board.checkmated).isFalse()
     }
@@ -129,6 +131,11 @@ class BoardTest {
         val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
         board.putPiece(Rook(BLACK, Position(3, 0)))
+        assertThat(board.nextTurn).isEqualTo(WHITE)
+        assertThat(kingInCheck.inCheck(board)).isFalse()
+        assertThat(board.checkmated).isFalse()
+        board.nextTurn()
+        assertThat(board.nextTurn).isEqualTo(BLACK)
         assertThat(kingInCheck.inCheck(board)).isFalse()
         assertThat(board.checkmated).isFalse()
     }
@@ -138,12 +145,77 @@ class BoardTest {
         val board = Board(false)
         val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
+        board.putPiece(Rook(BLACK, Position(3, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 3)))
+        board.putPiece(Queen(WHITE, Position(1, 2)))
+        board.nextTurn()
+        println(board)
+        assertThat(board.nextTurn).isEqualTo(BLACK)
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(board.checkmated).isFalse()
+    }
+
+    @Test
+    fun `is not checkmated 2`() {
+        val board = Board(false)
+        val kingInCheck = King(BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(BLACK, Position(3, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 3)))
+        board.putPiece(Pawn(WHITE, Position(1, 2)))
+        board.nextTurn()
+        println(board)
+        assertThat(board.nextTurn).isEqualTo(BLACK)
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(board.checkmated).isFalse()
+    }
+
+    @Test
+    fun `is checkmated`() {
+        val board = Board(false)
+        val kingInCheck = King(BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
         board.putPiece(Rook(WHITE, Position(3, 0)))
         board.putPiece(Rook(WHITE, Position(0, 3)))
         board.putPiece(Queen(WHITE, Position(1, 1)))
         board.putPiece(Bishop(WHITE, Position(5, 1)))
+        board.nextTurn()
         println(board)
+        assertThat(board.nextTurn).isEqualTo(BLACK)
         assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(board.checkmated).isTrue()
+    }
+
+    @Test
+    fun `is checkmated 2`() {
+        val board = Board(false)
+        board.putPiece(King(BLACK, Position(0, 0)))
+        board.putPiece(Queen(WHITE, Position(2, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 5)))
+        board.nextTurn()
+        assertThat(board.nextTurn).isEqualTo(BLACK)
+        assertThat(board.checkmated).isTrue()
+    }
+
+    @Test
+    fun `is checkmated but attacking piece can be captured`() {
+        val board = Board(false)
+        board.putPiece(King(BLACK, Position(0, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 3)))
+        board.putPiece(Rook(WHITE, Position(1, 3)))
+        board.putPiece(Rook(BLACK, Position(0, 4)))
+        board.nextTurn()
+        assertThat(board.nextTurn).isEqualTo(BLACK)
         assertThat(board.checkmated).isFalse()
     }
 }
+
+    @Test
+    fun `is checkmated but king can capture attacker`() {
+        val board = Board(false)
+        board.putPiece(King(BLACK, Position(0, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 1)))
+        board.nextTurn()
+        assertThat(board.nextTurn).isEqualTo(BLACK)
+        assertThat(board.checkmated).isFalse()
+    }

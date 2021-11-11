@@ -99,6 +99,8 @@ class Board : Entity {
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
 
+        // TODO What if checkmate could be prevented via castling?
+
         with(this.castlingAllowed) {
             clear()
             if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
@@ -108,12 +110,14 @@ class Board : Entity {
 
         checkmated = run {
             val K = findKing() ?: return@run false
-            if (K.allowedNextPositions(this@Board).any { !K.inCheck(Board(this@Board).move(K, it)) }) {
-                return@run false // All of the next positions for king end in check.
+            if (!K.inCheck(this@Board)
+                    || K.allowedNextPositions(this@Board).any { !K.inCheck(Board(this@Board).move(K, it)) }) {
+                return@run false // There's a next position for King not ending in check.
             }
             return@run opponentPieces(nextTurn) // Is it possible to capture the attacking piece?
-                .first { opp -> Board(this@Board).let { it.removePiece(opp.position); !K.inCheck(it) } }
-                .let { ap -> ownPieces(nextTurn).any { own -> own.allowedNextPositions(this@Board).contains(ap.position) } }
+                .firstOrNull { opp -> Board(this@Board).let { it.removePiece(opp.position); !K.inCheck(it) } }
+                ?.let { ap -> !ownPieces(nextTurn).any { own -> own.allowedNextPositions(this@Board).contains(ap.position) } }
+                ?: true // Multiple attackers.
         }
     }
 
