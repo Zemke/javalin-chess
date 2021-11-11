@@ -1,7 +1,7 @@
 package io.zemke.javalinchess.chess
 
 import io.zemke.javalinchess.chess.piece.*
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class BoardTest {
@@ -12,12 +12,12 @@ class BoardTest {
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
         val piece = board.findPiece(source)
-        Assertions.assertThat(piece).isNotNull
-        Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
+        assertThat(piece).isNotNull
+        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(3, 5)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.findPiece(source)).isNull()
+        assertThat(actual.findPiece(target)).isEqualTo(piece)
+        assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -26,12 +26,12 @@ class BoardTest {
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
         val piece = board.findPiece(source)
-        Assertions.assertThat(piece).isNotNull
-        Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
+        assertThat(piece).isNotNull
+        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(3, 1)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.findPiece(source)).isNull()
+        assertThat(actual.findPiece(target)).isEqualTo(piece)
+        assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -40,12 +40,12 @@ class BoardTest {
         val source = Position(3, 3)
         board.putPiece(Rook(Color.BLACK, source))
         val piece = board.findPiece(source)
-        Assertions.assertThat(piece).isNotNull
-        Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
+        assertThat(piece).isNotNull
+        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(5, 3)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.findPiece(source)).isNull()
+        assertThat(actual.findPiece(target)).isEqualTo(piece)
+        assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -54,12 +54,12 @@ class BoardTest {
         val board = Board(false)
         board.putPiece(Rook(Color.BLACK, source))
         val piece = board.findPiece(source)
-        Assertions.assertThat(piece).isNotNull
-        Assertions.assertThat(piece).isExactlyInstanceOf(Rook::class.java)
+        assertThat(piece).isNotNull
+        assertThat(piece).isExactlyInstanceOf(Rook::class.java)
         val target = Position(1, 3)
         val actual = board.move(piece!!, target)
-        Assertions.assertThat(actual.findPiece(target)).isEqualTo(piece)
-        Assertions.assertThat(actual.findPiece(source)).isNull()
+        assertThat(actual.findPiece(target)).isEqualTo(piece)
+        assertThat(actual.findPiece(source)).isNull()
     }
 
     @Test
@@ -72,10 +72,10 @@ class BoardTest {
         println(board)
         board.move(passer, Position(0, 2))
         println(board)
-        Assertions.assertThat(board.findPiece(Position(0, 3))).isNull()
-        Assertions.assertThat(board.findPieceById(passible.id)).isNull()
-        Assertions.assertThat(board.findPiece(Position(0, 2))).isEqualTo(passer)
-        Assertions.assertThat(board.captured).containsExactly(passible)
+        assertThat(board.findPiece(Position(0, 3))).isNull()
+        assertThat(board.findPieceById(passible.id)).isNull()
+        assertThat(board.findPiece(Position(0, 2))).isEqualTo(passer)
+        assertThat(board.captured).containsExactly(passible)
     }
 
     @Test
@@ -90,8 +90,8 @@ class BoardTest {
         board.nextTurn()
         board.nextTurn()
         println("$board")
-        Assertions.assertThat(king.castlingAllowed(board, rookKingside)).isTrue
-        Assertions.assertThat(board.castlingAllowed)
+        assertThat(king.castlingAllowed(board, rookKingside)).isTrue
+        assertThat(board.castlingAllowed)
                 .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
     }
 
@@ -106,8 +106,42 @@ class BoardTest {
         board.putPiece(rookKingside)
         board.nextTurn()
         println("$board")
-        Assertions.assertThat(king.castlingAllowed(board, rookKingside)).isTrue
-        Assertions.assertThat(board.castlingAllowed)
+        assertThat(king.castlingAllowed(board, rookKingside)).isTrue
+        assertThat(board.castlingAllowed)
                 .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+    }
+
+    @Test
+    fun `is in check`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(board.checkmated).isFalse()
+    }
+
+    @Test
+    fun `is not in check because own Piece`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.BLACK, Position(3, 0)))
+        assertThat(kingInCheck.inCheck(board)).isFalse()
+        assertThat(board.checkmated).isFalse()
+    }
+
+    @Test
+    fun `is not checkmated`() {
+        val board = Board(false)
+        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        board.putPiece(kingInCheck)
+        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
+        board.putPiece(Rook(Color.WHITE, Position(0, 3)))
+        board.putPiece(Queen(Color.WHITE, Position(1, 1)))
+        board.putPiece(Bishop(Color.WHITE, Position(5, 1)))
+        println(board)
+        assertThat(kingInCheck.inCheck(board)).isTrue()
+        assertThat(board.checkmated).isFalse()
     }
 }

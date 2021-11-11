@@ -9,6 +9,7 @@ class Board : Entity {
 
     /** [Rook.Side]s of rooks that can castle for color in [nextTurn]. */
     val castlingAllowed: MutableSet<Rook.Side>
+    var checkmated: Boolean = false
     val grid: List<MutableList<Piece?>>
     val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
     var nextTurn: Color = WHITE
@@ -38,7 +39,6 @@ class Board : Entity {
                     mutableListOf(Pawn(WHITE, Position(0, 6)), Pawn(WHITE, Position(1, 6)), Pawn(WHITE, Position(2, 6)), Pawn(WHITE, Position(3, 6)), Pawn(WHITE, Position(4, 6)), Pawn(WHITE, Position(5, 6)), Pawn(WHITE, Position(6, 6)), Pawn(WHITE, Position(7, 6))),
                     mutableListOf(Rook(WHITE, Position(0, 7)), Knight(WHITE, Position(1, 7)), Bishop(WHITE, Position(2, 7)), Queen(WHITE, Position(3, 7)), King(WHITE, Position(4, 7)), Bishop(WHITE, Position(5, 7)), Knight(WHITE, Position(6, 7)), Rook(WHITE, Position(7, 7)))
             )
-            this.castlingAllowed = mutableSetOf()
         } else {
             grid = listOf(
                     mutableListOf(null, null, null, null, null, null, null, null),
@@ -50,13 +50,15 @@ class Board : Entity {
                     mutableListOf(null, null, null, null, null, null, null, null),
                     mutableListOf(null, null, null, null, null, null, null, null)
             )
-            this.castlingAllowed = mutableSetOf()
         }
+        this.castlingAllowed = mutableSetOf()
+        this.checkmated = false
     }
 
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
         this.castlingAllowed = board.castlingAllowed
+        this.checkmated = board.checkmated
         this.nextTurn = board.nextTurn
         this.uuidBlack = board.uuidBlack
         this.uuidWhite = board.uuidWhite
@@ -96,16 +98,31 @@ class Board : Entity {
 
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
+
         with(this.castlingAllowed) {
             clear()
             if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
             if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
             this
         }
+
+        checkmated = run {
+            val K = findKing() ?: return@run false
+            if (K.allowedNextPositions(this@Board).any { !K.inCheck(Board(this@Board).move(K, it)) }) {
+                return@run false // All of the next positions for king end in check.
+            }
+            return@run opponentPieces(nextTurn) // Is it possible to capture the attacking piece?
+                .first { opp -> Board(this@Board).let { it.removePiece(opp.position); !K.inCheck(it) } }
+                .let { ap -> ownPieces(nextTurn).any { own -> own.allowedNextPositions(this@Board).contains(ap.position) } }
+        }
     }
 
     fun findPiece(position: Position): Piece? {
         return grid[position.rank][position.file]
+    }
+
+    fun removePiece(position: Position) {
+        grid[position.rank][position.file] = null
     }
 
     fun putPiece(piece: Piece, force: Boolean = false) {
@@ -136,10 +153,6 @@ class Board : Entity {
                 .filter { it.color != color }
     }
 
-    fun checkmated() {
-        TODO("checkmated() is not yet implemented")
-    }
-
     fun stalemated() {
         TODO("stalemated() is not yet implemented")
     }
@@ -164,6 +177,9 @@ class Board : Entity {
         }
         return movements.zipWithNext()
     }
+
+    fun findKing(): King? =
+            findPieces<King>(nextTurn).let { if (it.isNotEmpty()) it.first() else null }
 
     fun findRook(side: Rook.Side) =
             findPieces<Rook>(nextTurn).find { it.side == side }
