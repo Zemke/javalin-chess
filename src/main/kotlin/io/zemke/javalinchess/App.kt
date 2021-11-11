@@ -41,8 +41,6 @@ class JavalinChess {
             path("api") {
                 get("/") { ctx -> ctx.result("Hello World") }
                 path("board") {
-                    post("/checkmated") { boardController::checkmated }
-                    post("/stalemated") { boardController::stalemated }
                     get("", boardController::get)
                     post(boardController::create)
                     path(":key") {
