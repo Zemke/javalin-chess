@@ -40,6 +40,7 @@ class TurnControllerTest {
         val target = Position(0, 4)
         val newBoard = Board(true).move(piece, target)
         every { memcached.store(board.id, newBoard) } returns true
+        every { anyConstructed<DelegationContext>().queryParam("spinoff") } returns "0"
         every { anyConstructed<DelegationContext>().header("auth") } returns authUuid
         every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
         every { anyConstructed<DelegationContext>().body() } returns JavalinJson.toJson(TurnDto(piece.id, target))
@@ -62,6 +63,7 @@ class TurnControllerTest {
         val target = Position(4, 7)
         val turnDto = TurnDto(piece = pawn.id, target = target, promotion = "Queen")
         every { anyConstructed<DelegationContext>().body() } returns JavalinJson.toJson(turnDto)
+        every { anyConstructed<DelegationContext>().queryParam("spinoff") } returns ""
         every { anyConstructed<DelegationContext>().header("auth") } returns authUuid
         every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
         every { anyConstructed<DelegationContext>().pathParam("boardKey") } returns board.id
@@ -70,6 +72,35 @@ class TurnControllerTest {
         every { memcached.retrieve<Board>(board.id) } returns board
         every { memcached.store(board.id, capture(boardSlot)) } returns true
         turnController.create(ctx)
+        val promotion = boardSlot.captured.findPiece(target)
+        assertThat(promotion).isNotNull
+        assertThat(promotion!!.position).isEqualTo(target)
+        assertThat(promotion.color).isEqualTo(pawn.color)
+    }
+
+    @Test
+    fun `POST new turn spinoff`() {
+        val ctx = mockk<Context>(relaxed = true)
+        mockkConstructor(DelegationContext::class)
+        val board = Board(false)
+        val pawn = Pawn(Color.BLACK, Position(4, 6))
+        board.putPiece(pawn)
+        board.nextTurn()
+        val target = Position(4, 7)
+        val turnDto = TurnDto(piece = pawn.id, target = target, promotion = "Queen")
+        every { anyConstructed<DelegationContext>().body() } returns JavalinJson.toJson(turnDto)
+        every { anyConstructed<DelegationContext>().queryParam("spinoff") } returns "1"
+        every { anyConstructed<DelegationContext>().header("auth") } returns authUuid
+        every { anyConstructed<DelegationContext>().pathParam("key") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("boardKey") } returns board.id
+        every { anyConstructed<DelegationContext>().pathParam("pieceKey") } returns pawn.id
+        val boardIdSlot = slot<String>()
+        val boardSlot = slot<Board>()
+        every { memcached.retrieve<Board>(board.id) } returns board
+        every { memcached.store(capture(boardIdSlot), capture(boardSlot)) } returns true
+        turnController.create(ctx)
+        assertThat(boardIdSlot.captured).isNotEqualTo(board.id)
+        assertThat(boardSlot.captured).isNotEqualTo(board)
         val promotion = boardSlot.captured.findPiece(target)
         assertThat(promotion).isNotNull
         assertThat(promotion!!.position).isEqualTo(target)

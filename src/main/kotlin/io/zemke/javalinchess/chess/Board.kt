@@ -62,6 +62,8 @@ class Board : Entity {
         this.nextTurn = board.nextTurn
         this.uuidBlack = board.uuidBlack
         this.uuidWhite = board.uuidWhite
+        this.captured.addAll(board.captured)
+        this.movements.addAll(board.movements)
     }
 
     fun findPieceById(pieceId: String): Piece? =

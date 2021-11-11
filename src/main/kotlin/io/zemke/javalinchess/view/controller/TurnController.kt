@@ -21,6 +21,8 @@ class TurnController {
     fun create(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
+            .let { b -> ctx.queryParam("spinoff")
+                .let { if (it == "1" || it == "true") Board(b) else b } }
         val turn = JavalinJson.fromJson(ctx.body(), TurnDto::class.java)
         val piece = board.findPieceById(turn.piece)
                 ?: throw BadRequestResponse("Piece ${turn.piece} not found in grid")
