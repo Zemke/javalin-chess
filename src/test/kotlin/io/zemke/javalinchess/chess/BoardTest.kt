@@ -1,6 +1,8 @@
 package io.zemke.javalinchess.chess
 
 import io.zemke.javalinchess.chess.piece.*
+import io.zemke.javalinchess.chess.piece.Color.BLACK
+import io.zemke.javalinchess.chess.piece.Color.WHITE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,7 +12,7 @@ class BoardTest {
     fun `rook move right`() {
         val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Color.BLACK, source))
+        board.putPiece(Rook(BLACK, source))
         val piece = board.findPiece(source)
         assertThat(piece).isNotNull
         assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -24,7 +26,7 @@ class BoardTest {
     fun `rook move left`() {
         val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Color.BLACK, source))
+        board.putPiece(Rook(BLACK, source))
         val piece = board.findPiece(source)
         assertThat(piece).isNotNull
         assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -38,7 +40,7 @@ class BoardTest {
     fun `rook move up`() {
         val board = Board(false)
         val source = Position(3, 3)
-        board.putPiece(Rook(Color.BLACK, source))
+        board.putPiece(Rook(BLACK, source))
         val piece = board.findPiece(source)
         assertThat(piece).isNotNull
         assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -52,7 +54,7 @@ class BoardTest {
     fun `rook move down`() {
         val source = Position(3, 3)
         val board = Board(false)
-        board.putPiece(Rook(Color.BLACK, source))
+        board.putPiece(Rook(BLACK, source))
         val piece = board.findPiece(source)
         assertThat(piece).isNotNull
         assertThat(piece).isExactlyInstanceOf(Rook::class.java)
@@ -64,9 +66,9 @@ class BoardTest {
 
     @Test
     fun `en passant`() {
-        val passer = Pawn(Color.WHITE, Position(1, 3))
+        val passer = Pawn(WHITE, Position(1, 3))
         val board = Board(false)
-        val passible = Pawn(Color.BLACK, Position(0, 1))
+        val passible = Pawn(BLACK, Position(0, 1))
         board.putPieces(passer, passible)
         board.move(passible, Position(0, 3))
         println(board)
@@ -81,9 +83,9 @@ class BoardTest {
     @Test
     fun `nextTurn white`() {
         val board = Board(false)
-        val king = King(Color.WHITE, Position(4, 7))
-        val rookQueenside = Rook(Color.WHITE, Position(0, 7))
-        val rookKingside = Rook(Color.WHITE, Position(7, 7))
+        val king = King(WHITE, Position(4, 7))
+        val rookQueenside = Rook(WHITE, Position(0, 7))
+        val rookKingside = Rook(WHITE, Position(7, 7))
         board.putPiece(king)
         board.putPiece(rookQueenside)
         board.putPiece(rookKingside)
@@ -98,9 +100,9 @@ class BoardTest {
     @Test
     fun `nextTurn black`() {
         val board = Board(false)
-        val king = King(Color.BLACK, Position(4, 0))
-        val rookQueenside = Rook(Color.BLACK, Position(0, 0))
-        val rookKingside = Rook(Color.BLACK, Position(7, 0))
+        val king = King(BLACK, Position(4, 0))
+        val rookQueenside = Rook(BLACK, Position(0, 0))
+        val rookKingside = Rook(BLACK, Position(7, 0))
         board.putPiece(king)
         board.putPiece(rookQueenside)
         board.putPiece(rookKingside)
@@ -114,9 +116,9 @@ class BoardTest {
     @Test
     fun `is in check`() {
         val board = Board(false)
-        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
-        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
+        board.putPiece(Rook(WHITE, Position(3, 0)))
         assertThat(kingInCheck.inCheck(board)).isTrue()
         assertThat(board.checkmated).isFalse()
     }
@@ -124,9 +126,9 @@ class BoardTest {
     @Test
     fun `is not in check because own Piece`() {
         val board = Board(false)
-        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
-        board.putPiece(Rook(Color.BLACK, Position(3, 0)))
+        board.putPiece(Rook(BLACK, Position(3, 0)))
         assertThat(kingInCheck.inCheck(board)).isFalse()
         assertThat(board.checkmated).isFalse()
     }
@@ -134,12 +136,12 @@ class BoardTest {
     @Test
     fun `is not checkmated`() {
         val board = Board(false)
-        val kingInCheck = King(Color.BLACK, Position(3, 3))
+        val kingInCheck = King(BLACK, Position(3, 3))
         board.putPiece(kingInCheck)
-        board.putPiece(Rook(Color.WHITE, Position(3, 0)))
-        board.putPiece(Rook(Color.WHITE, Position(0, 3)))
-        board.putPiece(Queen(Color.WHITE, Position(1, 1)))
-        board.putPiece(Bishop(Color.WHITE, Position(5, 1)))
+        board.putPiece(Rook(WHITE, Position(3, 0)))
+        board.putPiece(Rook(WHITE, Position(0, 3)))
+        board.putPiece(Queen(WHITE, Position(1, 1)))
+        board.putPiece(Bishop(WHITE, Position(5, 1)))
         println(board)
         assertThat(kingInCheck.inCheck(board)).isTrue()
         assertThat(board.checkmated).isFalse()
