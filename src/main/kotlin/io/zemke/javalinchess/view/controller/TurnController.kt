@@ -20,9 +20,9 @@ class TurnController {
 
     fun create(_ctx: Context) {
         val ctx = DelegationContext(_ctx)
+        val spinoff = ctx.queryParam("spinoff").let { it == "1" || it == "true" }
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
-            .let { b -> ctx.queryParam("spinoff")
-                .let { if (it == "1" || it == "true") Board(b) else b } }
+            .let { b -> if (spinoff) Board(b) else b }
         val turn = JavalinJson.fromJson(ctx.body(), TurnDto::class.java)
         val piece = board.findPieceById(turn.piece)
                 ?: throw BadRequestResponse("Piece ${turn.piece} not found in grid")
@@ -33,7 +33,7 @@ class TurnController {
             throw BadRequestResponse("Piece $piece cannot move to ${turn.target}")
         }
         val auth = ctx.header("auth")
-        if (!ViewUtil.isAuth(board, auth)) {
+        if (!spinoff && !ViewUtil.isAuth(board, auth)) {
             throw BadRequestResponse(
                     "${board.nextTurn} UUID expected " +
                             "${if (board.nextTurn == Color.BLACK) board.uuidBlack else board.uuidWhite} " +

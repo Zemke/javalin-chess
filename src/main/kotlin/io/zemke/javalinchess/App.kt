@@ -45,6 +45,7 @@ class JavalinChess {
                     post(boardController::create)
                     path(":key") {
                         get(boardController::get)
+                        get("turns", boardController::turns)
                         get("piece/:pieceKey/allowed-next-positions", pieceController::allowedNextPositions)
                         path("turn") {
                             post(turnController::create)

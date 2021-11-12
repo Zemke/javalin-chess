@@ -11,4 +11,5 @@ class DelegationContext(private val ctx: Context) {
     fun body() = ctx.body()
     fun status(statusCode: Int): Context = ctx.status(statusCode)
     fun json(obj: Any) = ctx.json(obj)
+    fun result(resultString: String) = ctx.result(resultString)
 }

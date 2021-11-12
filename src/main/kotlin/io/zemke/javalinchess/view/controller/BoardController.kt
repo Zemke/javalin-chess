@@ -7,6 +7,7 @@ import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.chess.Board
 import io.zemke.javalinchess.complex.Memcached
+import io.zemke.javalinchess.view.model.PieceTargetsDto
 
 @Zemke
 class BoardController {
@@ -23,7 +24,17 @@ class BoardController {
         ctx.status(201)
     }
 
-    fun get(ctx: Context) {
-        ctx.json(memcached.retrieve<Board>(ctx.pathParam("key")))
+    fun turns(_ctx: Context) = DelegationContext(_ctx).let { ctx ->
+        memcached.retrieve<Board>(ctx.pathParam("key")).also { board ->
+            board.ownPieces(board.nextTurn)
+                .map { PieceTargetsDto(it, it.allowedNextPositions(board)) }
+                .also { ctx.json(it) }
+            ctx.status(200)
+        }
+    }
+
+    fun get(_ctx: Context) = DelegationContext(_ctx).let { ctx ->
+        memcached.retrieve<Board>(ctx.pathParam("key"))?.let { ctx.json(it) }
+                ?: with(ctx) { result("no board ${ctx.pathParam("key")}"); status(404) }
     }
 }
