@@ -111,7 +111,7 @@ class Board : Entity {
         }
 
         checkmated = run {
-            val K = findPiece<King>() ?: return@run false
+            val K = findPiece<King>(nextTurn) ?: return@run false
             if (!K.inCheck(this@Board)
                     || K.allowedNextPositions(this@Board).any { !K.inCheck(Board(this@Board).move(K, it)) }) {
                 return@run false // There's a next position for King not ending in check.
