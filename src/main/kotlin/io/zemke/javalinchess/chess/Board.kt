@@ -190,7 +190,7 @@ class Board : Entity {
     inline fun <reified T : Piece> findPiece(color: Color): T? =
             grid.flatten()
                     .filterNotNull()
-                    .find { it is T && it.color == color } as T
+                    .find { it is T && it.color == color } as? T
 
     private fun castlingAllowed(side: Rook.Side) =
             findRook(side)
