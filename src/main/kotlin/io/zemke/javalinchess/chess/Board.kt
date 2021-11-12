@@ -111,7 +111,7 @@ class Board : Entity {
         }
 
         checkmated = run {
-            val K = findKing() ?: return@run false
+            val K = findPiece<King>() ?: return@run false
             if (!K.inCheck(this@Board)
                     || K.allowedNextPositions(this@Board).any { !K.inCheck(Board(this@Board).move(K, it)) }) {
                 return@run false // There's a next position for King not ending in check.
@@ -183,9 +183,6 @@ class Board : Entity {
         }
         return movements.zipWithNext()
     }
-
-    fun findKing(): King? =
-            findPieces<King>(nextTurn).let { if (it.isNotEmpty()) it.first() else null }
 
     fun findRook(side: Rook.Side) =
             findPieces<Rook>(nextTurn).find { it.side == side }
