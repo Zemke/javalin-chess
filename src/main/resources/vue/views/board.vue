@@ -10,8 +10,9 @@
       </div>
     </div>
     <div class="captured">
-      <div v-for="piece in board.captured" v-bind:class="piece.color.toLowerCase()">
+      <div v-for="(piece,idx) in board.captured" v-bind:class="piece.color.toLowerCase()">
         {{piece | piece}}
+        <div v-if="justCaptured && idx === board.captured.length - 1" class="justCaptured"></div>
       </div>
     </div>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
@@ -75,6 +76,7 @@
     },
     data: () => ({
       board: null,
+      justCaptured: false,
       allowedNextPositions: [],
       debug: new URLSearchParams(location.search).get('debug') != null,
       selected: {},
@@ -105,7 +107,12 @@
           setTimeout(() => {
             fetch(`api/board/${boardId}`)
               .then(res => res.json())
-              .then(res => this.board = res)
+              .then(res => {
+                if (res.movements.length !== this.board.movements.length) {
+                  this.justCaptured = res.captured.length !== this.board.captured.length;
+                }
+                this.board = res;
+              })
               .then(poll);
           }, 3000);
         };
@@ -418,6 +425,13 @@
   .captured .black {
     color: black;
     text-shadow: 0 0 5px #fff;
+  }
+
+  .captured .justCaptured {
+    position: absolute;
+    width: 2.2rem;
+    background-color: transparent;
+    box-shadow: .2rem -1.3rem 1.2rem .6rem red;
   }
 
   .nextTurn.white {
