@@ -1,5 +1,5 @@
 <template id="board">
-  <div>
+  <div v-if="board">
     <pre v-if="debug">{{board.castlingAllowed}}</pre>
     <div class="overlay" v-if="pendingPromotion != null">
       <div class="promotion">
