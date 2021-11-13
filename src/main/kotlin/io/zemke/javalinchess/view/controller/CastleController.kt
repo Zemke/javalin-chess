@@ -16,7 +16,7 @@ class CastleController {
     @Inject
     private lateinit var memcached: Memcached
 
-    fun castle(_ctx: Context) = DelegationContext(_ctx).let {
+    fun castle(_ctx: Context) = DelegationContext(_ctx).let { ctx ->
         // TODO auth check
         val side = Rook.Side.valueOf(ctx.pathParam("side").toUpperCase())
         val spinoff = ctx.queryParam("spinoff").let { it == "1" || it == "true" }
