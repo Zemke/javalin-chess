@@ -17,8 +17,11 @@ class CastleController {
     private lateinit var memcached: Memcached
 
     fun castle(_ctx: Context) = DelegationContext(_ctx).let {
+        // TODO auth check
         val side = Rook.Side.valueOf(ctx.pathParam("side").toUpperCase())
+        val spinoff = ctx.queryParam("spinoff").let { it == "1" || it == "true" }
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
+            .let { b -> if (spinoff) Board(b) else b }
         val king = board.findPiece<King>(board.nextTurn)
         if (king !is King) throw BadRequestResponse("Only King can perform castling")
         if (!board.castlingAllowed.contains(side))
