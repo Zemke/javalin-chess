@@ -101,8 +101,6 @@ class Board : Entity {
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
 
-        // TODO What if checkmate could be prevented via castling?
-
         with(this.castlingAllowed) {
             clear()
             if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
