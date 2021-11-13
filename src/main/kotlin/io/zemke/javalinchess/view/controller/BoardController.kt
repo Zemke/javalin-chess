@@ -6,6 +6,8 @@ import io.zemke.javalinchess.DelegationContext
 import io.zemke.javalinchess.aspectj.annotations.Inject
 import io.zemke.javalinchess.aspectj.annotations.Zemke
 import io.zemke.javalinchess.chess.Board
+import io.zemke.javalinchess.chess.piece.filterNotInCheck
+import io.zemke.javalinchess.chess.piece.Position
 import io.zemke.javalinchess.complex.Memcached
 import io.zemke.javalinchess.view.model.PieceTargetsDto
 
@@ -27,7 +29,7 @@ class BoardController {
     fun turns(_ctx: Context) = DelegationContext(_ctx).let { ctx ->
         memcached.retrieve<Board>(ctx.pathParam("key")).also { board ->
             board.ownPieces(board.nextTurn)
-                .map { PieceTargetsDto(it, it.allowedNextPositions(board)) }
+                .map { PieceTargetsDto(it, it.allowedNextPositions(board).filterNotInCheck(board, it)) }
                 .also { ctx.json(it) }
             ctx.status(200)
         }

@@ -1,6 +1,8 @@
 package io.zemke.javalinchess.chess.piece
 
 import java.io.Serializable
+import io.zemke.javalinchess.chess.Board
+
 
 class Position(val file: Int, val rank: Int) : Serializable {
 
@@ -46,3 +48,9 @@ class Position(val file: Int, val rank: Int) : Serializable {
                 if (isValidPosition(file, rank)) Position(file, rank) else null
     }
 }
+
+fun Set<Position>.filterNotInCheck(board: Board, piece: Piece) =
+    toMutableSet()
+        .filter { Board(board).let { b -> !(b.move(piece, it).findPiece<King>(b.nextTurn)?.inCheck(b) ?: false) } }
+        .toSet()
+

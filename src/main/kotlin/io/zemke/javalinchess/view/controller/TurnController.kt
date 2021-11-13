@@ -32,6 +32,11 @@ class TurnController {
         if (!piece.allowedNextPositions(board).contains(turn.target)) {
             throw BadRequestResponse("Piece $piece cannot move to ${turn.target}")
         }
+        Board(board).let { b ->
+            if (b.move(piece, turn.target).findPiece<King>(board.nextTurn)?.inCheck(b) ?: false) {
+                throw BadRequestResponse("Cannot move into check.")
+            }
+        }
         val auth = ctx.header("auth")
         if (!spinoff && !ViewUtil.isAuth(board, auth)) {
             throw BadRequestResponse(
