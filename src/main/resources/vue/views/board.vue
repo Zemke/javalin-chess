@@ -200,6 +200,7 @@
           })
           .then(res => res.json())
           .then(res => {
+            this.justCaptured = res.captured.length !== this.board.captured.length;
             this.board = res;
             this.selected = {};
             this.allowedNextPositions = [];
