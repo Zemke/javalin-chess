@@ -16,8 +16,7 @@ class CastleController {
     @Inject
     private lateinit var memcached: Memcached
 
-    fun castle(_ctx: Context) {
-        val ctx = DelegationContext(_ctx)
+    fun castle(_ctx: Context) = DelegationContext(_ctx).let {
         val side = Rook.Side.valueOf(ctx.pathParam("side").toUpperCase())
         val board = memcached.retrieve<Board>(ctx.pathParam("key"))
         val king = board.findPiece<King>(board.nextTurn)
