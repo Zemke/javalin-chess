@@ -115,8 +115,8 @@ class Board : Entity {
                 return@run false // There's a next position for King not ending in check.
             }
             return@run opponentPieces(nextTurn) // Is it possible to capture the attacking piece?
-                .firstOrNull { opp -> Board(this@Board).let { it.removePiece(opp.position); !K.inCheck(it) } }
-                ?.let { ap -> !ownPieces(nextTurn).any { own -> own.allowedNextPositions(this@Board).contains(ap.position) } }
+                .firstOrNull { opp -> Board(this@Board).let { it.removePiece(findPosition(opp)); !K.inCheck(it) } }
+                ?.let { ap -> !ownPieces(nextTurn).any { own -> own.allowedNextPositions(this@Board).contains(findPosition(ap)) } }
                 ?: true // Multiple attackers.
         }
     }
