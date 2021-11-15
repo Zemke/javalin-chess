@@ -17,13 +17,13 @@
     </div>
     <div class="nextTurn" v-bind:class="board.nextTurn.toLowerCase()"></div>
     <button class="castling kingside"
-            v-if="board.castlingAllowed.includes('KINGSIDE') && isMyTurn"
+            v-if="castlingAllowed('KINGSIDE')"
             v-on:click="castle('KINGSIDE')">
       <span>♚</span>
       <span>♜</span>
     </button>
     <button class="castling queenside"
-            v-if="board.castlingAllowed.includes('QUEENSIDE') && isMyTurn"
+            v-if="castlingAllowed('QUEENSIDE')"
             v-on:click="castle('QUEENSIDE')">
       <span>♜</span>
       <span>♚</span>
@@ -153,6 +153,9 @@
           },
           piece != null ? piece.color.toLowerCase() : (from != null && from.piece.color.toLowerCase())
         ]
+      },
+      castlingAllowed(side) {
+        return this.isMyTurn && this.board.castlingAllowed[this.board.nextTurn].includes(side);
       },
       select(piece) {
         if (piece.id === this.selected?.id) {

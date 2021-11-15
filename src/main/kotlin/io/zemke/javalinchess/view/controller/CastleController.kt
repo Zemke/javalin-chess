@@ -24,11 +24,10 @@ class CastleController {
             .let { b -> if (spinoff) Board(b) else b }
         val king = board.findPiece<King>(board.nextTurn)
         if (king !is King) throw BadRequestResponse("Only King can perform castling")
-        if (!board.castlingAllowed.contains(side))
-            throw BadRequestResponse("Castling is not allowed at the moment")
+        if (!board.castlingAllowed[board.nextTurn]!!.contains(side))
+            throw BadRequestResponse("Castling $side is not allowed at the moment")
         board.findRook(side)?.let { rook -> king.castle(board, rook) }
                 ?: throw BadRequestResponse("No $side rook.")
-        board.castlingAllowed.clear()
         board.nextTurn()
         memcached.store(board.id, board)
         ctx.status(201)

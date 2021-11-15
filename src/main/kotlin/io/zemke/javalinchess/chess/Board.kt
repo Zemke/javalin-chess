@@ -1,6 +1,7 @@
 package io.zemke.javalinchess.chess
 
 import io.zemke.javalinchess.chess.piece.*
+import io.zemke.javalinchess.chess.piece.Color
 import io.zemke.javalinchess.chess.piece.Color.BLACK
 import io.zemke.javalinchess.chess.piece.Color.WHITE
 import io.zemke.javalinchess.complex.Entity
@@ -8,7 +9,7 @@ import io.zemke.javalinchess.complex.Entity
 class Board : Entity {
 
     /** [Rook.Side]s of rooks that can castle for color in [nextTurn]. */
-    val castlingAllowed: MutableSet<Rook.Side>
+    val castlingAllowed: Map<Color, MutableSet<Rook.Side>> = mapOf(WHITE to mutableSetOf(), BLACK to mutableSetOf())
     var checkmated: Boolean = false
     val grid: List<MutableList<Piece?>>
     val movements: MutableList<Pair<Piece, Position>> = mutableListOf()
@@ -20,11 +21,7 @@ class Board : Entity {
 
     constructor(grid: List<MutableList<Piece?>>) {
         this.grid = grid
-        this.castlingAllowed = with(mutableSetOf<Rook.Side>()) {
-            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
-            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
-            this
-        }
+        castlingAllowed()
     }
 
     constructor(init: Boolean) {
@@ -51,13 +48,14 @@ class Board : Entity {
                     mutableListOf(null, null, null, null, null, null, null, null)
             )
         }
-        this.castlingAllowed = mutableSetOf()
+        castlingAllowed()
         this.checkmated = false
     }
 
     constructor(board: Board) {
         grid = board.grid.map { mutableListOf(*it.toTypedArray()) }
-        this.castlingAllowed = board.castlingAllowed
+        this.castlingAllowed[BLACK]!!.addAll(board.castlingAllowed[BLACK]!!)
+        this.castlingAllowed[WHITE]!!.addAll(board.castlingAllowed[WHITE]!!)
         this.checkmated = board.checkmated
         this.nextTurn = board.nextTurn
         this.uuidBlack = board.uuidBlack
@@ -101,12 +99,7 @@ class Board : Entity {
     fun nextTurn() {
         this.nextTurn = this.nextTurn.other()
 
-        with(this.castlingAllowed) {
-            clear()
-            if (castlingAllowed(Rook.Side.KINGSIDE)) add(Rook.Side.KINGSIDE)
-            if (castlingAllowed(Rook.Side.QUEENSIDE)) add(Rook.Side.QUEENSIDE)
-            this
-        }
+        castlingAllowed()
 
         checkmated = run {
             val K = findPiece<King>(nextTurn) ?: return@run false
@@ -190,10 +183,14 @@ class Board : Entity {
                     .filterNotNull()
                     .find { it is T && it.color == color } as? T
 
-    private fun castlingAllowed(side: Rook.Side) =
-            findRook(side)
-                    ?.let { findPiece<King>(nextTurn)?.castlingAllowed(this, it) ?: false }
-                    ?: false
+    private fun castlingAllowed() {
+        for (color in Color.values()) {
+            val castling = Rook.Side.values()
+                .filter { findRook(it)?.let { findPiece<King>(color)?.castlingAllowed(this, it) ?: false } ?: false }
+            castlingAllowed[color]!!.clear()
+            castlingAllowed[color]!!.addAll(castling)
+        }
+    }
 
     private inline fun <reified T : Piece> findPieces(color: Color): Set<T> =
             grid.asSequence().flatten()

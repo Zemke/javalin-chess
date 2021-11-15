@@ -80,9 +80,43 @@ class BoardTest {
         assertThat(board.captured).containsExactly(passible)
     }
 
+    private class Castle(val rookQ: Rook, val rookK: Rook, val K: King)
+
     @Test
-    fun `nextTurn white`() {
+    fun `castling nextTurn white`() {
         val board = Board(false)
+        val castle = castlingForWhite(board)
+        println("$board")
+        assertThat(castle.K.castlingAllowed(board, castle.rookK)).isTrue
+        assertThat(board.castlingAllowed[WHITE])
+                .containsExactlyInAnyOrder(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+    }
+
+    @Test
+    fun `castling nextTurn black`() {
+        val board = Board(false)
+        val castle = castlingForBlack(board)
+        println("$board")
+        assertThat(castle.K.castlingAllowed(board, castle.rookK)).isTrue
+        assertThat(board.castlingAllowed[BLACK])
+                .containsExactlyInAnyOrder(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+    }
+
+    @Test
+    fun `castling independent of turn`() {
+        val board = Board(false)
+        val castleWhite = castlingForWhite(board)
+        val castleBlack = castlingForBlack(board)
+        println("$board")
+        assertThat(castleWhite.K.castlingAllowed(board, castleWhite.rookK)).isTrue
+        assertThat(board.castlingAllowed[WHITE])
+                .containsExactlyInAnyOrder(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+        assertThat(castleBlack.K.castlingAllowed(board, castleBlack.rookK)).isTrue
+        assertThat(board.castlingAllowed[BLACK])
+                .containsExactlyInAnyOrder(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+    }
+
+    private fun castlingForWhite(board: Board): Castle {
         val king = King(WHITE, Position(4, 7))
         val rookQueenside = Rook(WHITE, Position(0, 7))
         val rookKingside = Rook(WHITE, Position(7, 7))
@@ -91,15 +125,10 @@ class BoardTest {
         board.putPiece(rookKingside)
         board.nextTurn()
         board.nextTurn()
-        println("$board")
-        assertThat(king.castlingAllowed(board, rookKingside)).isTrue
-        assertThat(board.castlingAllowed)
-                .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+        return Castle(K=king, rookQ=rookQueenside, rookK=rookKingside)
     }
 
-    @Test
-    fun `nextTurn black`() {
-        val board = Board(false)
+    private fun castlingForBlack(board: Board): Castle {
         val king = King(BLACK, Position(4, 0))
         val rookQueenside = Rook(BLACK, Position(0, 0))
         val rookKingside = Rook(BLACK, Position(7, 0))
@@ -107,10 +136,7 @@ class BoardTest {
         board.putPiece(rookQueenside)
         board.putPiece(rookKingside)
         board.nextTurn()
-        println("$board")
-        assertThat(king.castlingAllowed(board, rookKingside)).isTrue
-        assertThat(board.castlingAllowed)
-                .containsExactly(Rook.Side.KINGSIDE, Rook.Side.QUEENSIDE)
+        return Castle(K=king, rookQ=rookQueenside, rookK=rookKingside)
     }
 
     @Test
